@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 19, 2026 at 12:03 PM
+-- Generation Time: Mar 21, 2026 at 01:20 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -52,7 +52,11 @@ INSERT INTO `bookings` (`id`, `user_id`, `car_id`, `pickup_datetime`, `dropoff_d
 (10, 1, 5, '2026-03-19 14:49:00', '2026-03-20 14:49:00', 'with-driver', 1300000.00, 'completed', '2026-03-19 07:49:24'),
 (11, 1, 6, '2026-03-19 15:12:00', '2026-03-21 15:12:00', 'self-drive', 1700000.00, 'completed', '2026-03-19 08:12:31'),
 (13, 1, 8, '2026-03-19 15:21:00', '2026-03-21 15:21:00', 'with-driver', 2430000.00, 'completed', '2026-03-19 08:21:10'),
-(14, 1, 8, '2026-03-19 15:22:00', '2026-03-21 15:22:00', 'with-driver', 2700000.00, 'completed', '2026-03-19 08:22:53');
+(14, 1, 8, '2026-03-19 15:22:00', '2026-03-21 15:22:00', 'with-driver', 2700000.00, 'completed', '2026-03-19 08:22:53'),
+(15, 1, 8, '2026-03-20 09:38:00', '2026-03-21 11:38:00', 'self-drive', 1700000.00, 'completed', '2026-03-20 03:39:13'),
+(16, 1, 25, '2026-03-21 17:35:00', '2026-03-21 21:35:00', 'with-driver', 558000.00, 'cancelled', '2026-03-21 10:35:23'),
+(17, 1, 6, '2026-03-21 18:59:00', '2026-03-22 18:59:00', 'with-driver', 1215000.00, 'cancelled', '2026-03-21 11:59:57'),
+(18, 3, 18, '2026-03-21 19:15:00', '2026-03-24 19:15:00', 'with-driver', 7500000.00, 'confirmed', '2026-03-21 12:15:58');
 
 -- --------------------------------------------------------
 
@@ -129,7 +133,11 @@ INSERT INTO `payments` (`id`, `booking_id`, `payment_method`, `amount`, `payment
 (9, 10, 'cash', 1300000.00, 'completed', 'TXN69BBAA85E87D31773906565', '2026-03-19 07:49:25'),
 (10, 11, 'bank_transfer', 1700000.00, 'completed', 'TXN69BBAFF0D72251773907952', '2026-03-19 08:12:32'),
 (12, 13, 'bank_transfer', 2430000.00, 'completed', 'TXN69BBB1F9666E51773908473', '2026-03-19 08:21:13'),
-(13, 14, 'bank_transfer', 2700000.00, 'completed', 'TXN69BBB2603AAB21773908576', '2026-03-19 08:22:56');
+(13, 14, 'bank_transfer', 2700000.00, 'completed', 'TXN69BBB2603AAB21773908576', '2026-03-19 08:22:56'),
+(14, 15, 'cash', 99000.00, 'completed', 'TXN69BCC162DDC231773977954', '2026-03-20 03:39:14'),
+(15, 16, 'credit_card', 558000.00, 'completed', 'TXN69BE747BB9FC91774089339', '2026-03-21 10:35:39'),
+(16, 17, 'cash', 1215000.00, 'completed', 'TXN69BE88613FD781774094433', '2026-03-21 12:00:33'),
+(17, 18, 'cash', 7500000.00, 'completed', 'TXN69BE8BFFD7F5F1774095359', '2026-03-21 12:15:59');
 
 -- --------------------------------------------------------
 
@@ -157,7 +165,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `fullname`, `email`, `phone`, `password_hash`, `address`, `avatar_url`, `role`, `is_active`, `created_at`, `updated_at`, `membership_tier`) VALUES
-(1, 'Minh Hoang', 'tan0979876976@gmail.com', '0907495718', '$2y$10$T/gtH5jFuVwPO0vKs/X5dOC5JEU1p5AivhR8UBcqrGTE6e7x17LOG', NULL, NULL, 'admin', 0, '2026-03-19 05:20:41', '2026-03-19 06:59:07', 'new'),
+(1, 'Minh Hoang', 'tan0979876976@gmail.com', '0907495718', '$2y$10$T/gtH5jFuVwPO0vKs/X5dOC5JEU1p5AivhR8UBcqrGTE6e7x17LOG', NULL, NULL, 'admin', 0, '2026-03-19 05:20:41', '2026-03-21 12:17:59', 'loyal'),
 (3, 'Tran Van Tan', 'tantvgcs220674@fpt.edu.vn', '0979876976', '$2y$10$mlm4Vi8kGYGQsrRo7lwzk.t09M0fcw2hY6z3lqA.7Zrv2Lpo5TblW', NULL, NULL, 'customer', 0, '2026-03-19 09:51:57', '2026-03-19 09:52:19', 'vip');
 
 -- --------------------------------------------------------
@@ -231,7 +239,7 @@ ALTER TABLE `vouchers`
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `cars`
@@ -243,7 +251,7 @@ ALTER TABLE `cars`
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `users`

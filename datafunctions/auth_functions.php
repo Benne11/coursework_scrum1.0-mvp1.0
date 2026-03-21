@@ -79,7 +79,7 @@ function registerUser(PDO $db, string $fullname, string $email, string $phone, s
 function loginUser(PDO $db, string $email, string $password): array {
     try {
         // 1. Tìm user theo email
-        $stmt = $db->prepare("SELECT id, fullname, password_hash, role FROM users WHERE email = :email LIMIT 1");
+        $stmt = $db->prepare("SELECT id, fullname, password_hash, role, membership_tier FROM users WHERE email = :email LIMIT 1");
         $stmt->execute([':email' => $email]);
         $user = $stmt->fetch();
 
@@ -106,7 +106,8 @@ function loginUser(PDO $db, string $email, string $password): array {
             'user' => [
                 'id'       => $user['id'],
                 'fullname' => $user['fullname'],
-                'role'     => $user['role']
+                'role'     => $user['role'],
+                'membership_tier' => $user['membership_tier']
             ]
         ];
 

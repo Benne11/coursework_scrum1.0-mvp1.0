@@ -149,6 +149,7 @@ if (isset($_SESSION['error_message'])) {
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             transition: all 0.3s;
+            margin-bottom: 30px; /* Thêm khoảng cách ở dưới nút */
         }
         .btn-back:hover {
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
@@ -165,7 +166,7 @@ if (isset($_SESSION['error_message'])) {
         <a href="index.php?action=browse_cars">Browse Cars</a>
         <?php if (isset($_SESSION['user'])): ?>
             <?php if (isset($_SESSION['user']['role']) && $_SESSION['user']['role'] === 'admin'): ?>
-                <a href="index.php?action=admin_dashboard" style="color: #ffc107;">Admin Panel</a>
+                <!--<a href="index.php?action=admin_dashboard" style="color: #ffc107;">Admin Panel</a>-->
             <?php endif; ?>
             <a href="index.php?action=my_bookings">My Bookings</a>
             <a href="index.php?action=logout">Logout (<?= htmlspecialchars($_SESSION['user']['fullname']) ?>)</a>
