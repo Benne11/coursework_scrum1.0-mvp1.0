@@ -57,16 +57,16 @@ unset($_SESSION['register_success']);
         </div>
     <?php endif; ?>
 
-    <form action="index.php?action=login_submit" method="POST">
+    <form action="index.php?action=login_submit" method="POST" autocomplete="off">
         <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" id="email" name="email" value="<?= htmlspecialchars($rememberedEmail) ?>" required placeholder="Enter your email">
+            <input type="email" id="email" name="email" value="<?= htmlspecialchars($rememberedEmail) ?>" required placeholder="Enter your email" autocomplete="off">
         </div>
 
         <div class="form-group">
             <label for="password">Password</label>
             <div class="password-container">
-                <input type="password" id="password" name="password" required placeholder="Enter your password">
+                <input type="password" id="password" name="password" required placeholder="Enter your password" autocomplete="new-password">
                 <span class="toggle-password" onclick="togglePasswordVisibility('password', this)">👁️</span>
             </div>
         </div>

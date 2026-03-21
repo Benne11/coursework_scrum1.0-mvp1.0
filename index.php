@@ -55,6 +55,8 @@ switch ($action) {
         break;
 
     case 'register_submit':
+    case 'verify_otp':
+    case 'verify_otp_submit':
         // Khởi tạo kết nối DB và xử lý form submit
         require_once 'config/database.php';
         require_once 'controllers/AuthController.php';
