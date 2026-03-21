@@ -66,6 +66,8 @@
             <a href="index.php?action=admin_cars"><i class="fas fa-car"></i> Manage Cars</a>
             <a href="index.php?action=admin_bookings"><i class="fas fa-calendar-alt"></i> Manage Bookings</a>
             <a href="index.php?action=admin_users" class="active"><i class="fas fa-users"></i> Manage Users</a>
+            <a href="index.php?action=admin_users" class="active"><i class="fas fa-users"></i> Manage Users</a>
+            <a href="index.php?action=admin_users" class="active"><i class="fas fa-users"></i> Manage Users</a>
         </div>
         <div class="sidebar-footer">
             <a href="index.php?action=home" class="btn-back"><i class="fas fa-store"></i> Back to Store</a>
