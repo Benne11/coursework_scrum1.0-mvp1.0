@@ -17,9 +17,10 @@ switch ($action) {
         if (isset($_SESSION['user'])) {
             $fullname = htmlspecialchars($_SESSION['user']['fullname']);
             $role = htmlspecialchars($_SESSION['user']['role']);
+            $tier = htmlspecialchars($_SESSION['user']['membership_tier'] ?? 'new');
             //$adminLink = ($role === 'admin') ? "<a href='index.php?action=admin_dashboard' style='color: #ffc107; font-weight: bold; text-decoration: none; margin-right: 15px;'>Admin Panel</a>" : "";
             
-            echo "<p style='font-size: 18px;'>Welcome, <strong>{$fullname}</strong>! (Role: {$role})</p>";
+            echo "<p style='font-size: 18px;'>Welcome, <strong>{$fullname}</strong>! (Role: {$role} | Tier: <span style='color: #ffc107; font-weight: bold;'>{$tier}</span>)</p>";
             echo "<p>
                     
                     
@@ -54,6 +55,8 @@ switch ($action) {
         break;
 
     case 'register_submit':
+    case 'verify_otp':
+    case 'verify_otp_submit':
         // Khởi tạo kết nối DB và xử lý form submit
         require_once 'config/database.php';
         require_once 'controllers/AuthController.php';

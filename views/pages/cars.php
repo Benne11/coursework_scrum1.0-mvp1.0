@@ -42,6 +42,17 @@
         }
         .navbar a:hover { color: #ffc107; }
 
+        /* User Context Fix */
+        .nav-links {
+            display: flex;
+            align-items: center;
+        }
+        .user-greeting {
+            color: white;
+            margin-left: 20px;
+            font-weight: 500;
+        }
+
         /* Container Layout */
         .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
         .page-title { 
@@ -186,6 +197,12 @@
             border: 1px solid #e9ecef;
         }
         
+        /* Adjustments for Responsive Car Meta */
+        .car-meta span {
+            font-size: 11px;
+            padding: 3px 8px;
+        }
+        
         /* Pricing Info */
         .pricing-box {
             background-color: #f8f9fa;
@@ -245,13 +262,11 @@
     <div class="logo"><strong>Born Car</strong></div>
     <div class="nav-links">
         <a href="index.php?action=home">Home</a>
-        <a href="index.php?action=browse_cars">Browse Cars</a>
-        <!--<?php if (isset($_SESSION['user'])): ?>
-            <?php if (isset($_SESSION['user']['role']) && $_SESSION['user']['role'] === 'admin'): ?>
-                <a href="index.php?action=admin_dashboard">Admin Panel</a>-->
-            <?php endif; ?>
+        <a href="index.php?action=browse_cars" class="active">Browse Cars</a>
+        <?php if (isset($_SESSION['user'])): ?>
             <a href="index.php?action=my_bookings">My Bookings</a>
-            <a href="index.php?action=logout">Logout (<?= htmlspecialchars($_SESSION['user']['fullname']) ?>)</a>
+            <span class="user-greeting">Hi, <?= htmlspecialchars($_SESSION['user']['fullname']) ?></span>
+            <a href="index.php?action=logout" style="color: orange;">Logout</a>
         <?php else: ?>
             <a href="index.php?action=login_form">Login</a>
         <?php endif; ?>
@@ -329,9 +344,14 @@
                             <span><?= htmlspecialchars($car['fuel_type']) ?></span>
                         </div>
                         
+                        <div class="pricing-box">
+                            <div class="car-price">$<?= number_format($car['price_per_day'], 0) ?> <span class="car-price-sub">/ Day</span></div>
+                            <div class="car-price-sub">$<?= number_format($car['price_per_hour'], 0) ?> / Hour</div>
+                        </div>
+                        
                         <div class="card-actions">
-                            <a href="index.php?action=car_detail&id=<?= htmlspecialchars($car['id']) ?>" class="btn-book btn-view">View Details</a>
-                            <a href="index.php?action=book_form&car_id=<?= htmlspecialchars($car['id']) ?>" class="btn-book btn-instant">Book</a>
+                            <a href="index.php?action=car_detail&id=<?= htmlspecialchars($car['id']) ?>" class="btn-book btn-view">Details</a>
+                            <a href="index.php?action=book_form&car_id=<?= htmlspecialchars($car['id']) ?>" class="btn-book btn-instant">Book Now</a>
                         </div>
                     </div>
                 </div>

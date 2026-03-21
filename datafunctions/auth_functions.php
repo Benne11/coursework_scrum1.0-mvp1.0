@@ -11,9 +11,10 @@ require_once __DIR__ . '/../config/database.php';
  * @param string $email Địa chỉ email
  * @param string $phone Số điện thoại
  * @param string $password Mật khẩu (chưa mã hóa)
+ * @param string $otp_code Mã OTP để xác thực
  * @return array Mảng kết quả gồm trạng thái và thông báo
  */
-function registerUser(PDO $db, string $fullname, string $email, string $phone, string $password): array {
+function registerUser(PDO $db, string $fullname, string $email, string $phone, string $password, string $otp_code): array {
     try {
         // 1. Kiểm tra email hoặc số điện thoại đã tồn tại chưa
         $stmtCheck = $db->prepare("SELECT id FROM users WHERE email = :email OR phone = :phone LIMIT 1");
@@ -33,23 +34,25 @@ function registerUser(PDO $db, string $fullname, string $email, string $phone, s
         $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 
         // 3. Thực hiện INSERT người dùng mới
-        // Mặc định role là 'customer', is_active = 0 (chưa kích hoạt)
+        // is_verified = 0 (chưa xác thực), is_active = 0 (chưa kích hoạt)
+        // role='customer', membership_tier='new'
         $stmtInsert = $db->prepare("
-            INSERT INTO users (fullname, email, phone, password_hash) 
-            VALUES (:fullname, :email, :phone, :password_hash)
+            INSERT INTO users (fullname, email, phone, password_hash, role, membership_tier, otp_code, is_verified, is_active) 
+            VALUES (:fullname, :email, :phone, :password_hash, 'customer', 'new', :otp_code, 0, 0)
         ");
         
         $inserted = $stmtInsert->execute([
             ':fullname'      => $fullname,
             ':email'         => $email,
             ':phone'         => $phone,
-            ':password_hash' => $passwordHash
+            ':password_hash' => $passwordHash,
+            ':otp_code'      => $otp_code
         ]);
 
         if ($inserted) {
             return [
                 'success' => true, 
-                'message' => 'Registration successful! Please login.'
+                'message' => 'Registration successful! Please verify your email.'
             ];
         }
 
@@ -59,12 +62,39 @@ function registerUser(PDO $db, string $fullname, string $email, string $phone, s
         ];
 
     } catch (PDOException $e) {
-        // Ghi log lỗi hệ thống (không hiển thị ra view)
         error_log("registerUser Error: " . $e->getMessage());
         return [
             'success' => false, 
             'message' => 'System error. Please try again later.'
         ];
+    }
+}
+
+/**
+ * Xác thực mã OTP
+ *
+ * @param PDO $db
+ * @param string $email
+ * @param string $otp
+ * @return bool
+ */
+function verifyOTP(PDO $db, string $email, string $otp): bool {
+    try {
+        // Kiểm tra OTP có khớp với email không
+        // (Có thể thêm điều kiện thời gian hết hạn nếu muốn, ở đây làm simple MVP)
+        $stmt = $db->prepare("SELECT id FROM users WHERE email = :email AND otp_code = :otp AND is_verified = 0 LIMIT 1");
+        $stmt->execute([':email' => $email, ':otp' => $otp]);
+        
+        if ($stmt->fetch()) {
+            // Nếu khớp, update is_verified = 1, is_active = 1, xóa otp_code
+            $update = $db->prepare("UPDATE users SET is_verified = 1, is_active = 1, otp_code = NULL WHERE email = :email");
+            return $update->execute([':email' => $email]);
+        }
+        
+        return false;
+    } catch (PDOException $e) {
+        error_log("verifyOTP Error: " . $e->getMessage());
+        return false;
     }
 }
 
@@ -79,7 +109,7 @@ function registerUser(PDO $db, string $fullname, string $email, string $phone, s
 function loginUser(PDO $db, string $email, string $password): array {
     try {
         // 1. Tìm user theo email
-        $stmt = $db->prepare("SELECT id, fullname, password_hash, role FROM users WHERE email = :email LIMIT 1");
+        $stmt = $db->prepare("SELECT id, fullname, password_hash, role, membership_tier FROM users WHERE email = :email LIMIT 1");
         $stmt->execute([':email' => $email]);
         $user = $stmt->fetch();
 
@@ -106,7 +136,8 @@ function loginUser(PDO $db, string $email, string $password): array {
             'user' => [
                 'id'       => $user['id'],
                 'fullname' => $user['fullname'],
-                'role'     => $user['role']
+                'role'     => $user['role'],
+                'membership_tier' => $user['membership_tier']
             ]
         ];
 

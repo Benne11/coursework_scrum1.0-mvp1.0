@@ -52,7 +52,7 @@ function getVoucherByCode(PDO $db, string $code) {
 }
 
 /**
- * Lấy danh sách voucher hợp lệ theo hạng thành viên
+ * Lấy danh sách voucher hợp lệ theo hạng thành viên (Phân cấp: VIP > Loyal > New)
  *
  * @param PDO $db
  * @param string $tier
@@ -60,9 +60,25 @@ function getVoucherByCode(PDO $db, string $code) {
  */
 function getAvailableVouchers(PDO $db, string $tier): array {
     try {
-        $sql = "SELECT * FROM vouchers WHERE is_active = 1 AND (required_tier = 'all' OR required_tier = :tier)";
+        $tier = strtolower(trim($tier));
+        
+        // Xây dựng danh sách các hạng được phép
+        $allowed_tiers = ['all', 'new']; // Mặc định ai cũng có 'all' và 'new'
+        
+        if ($tier === 'loyal') {
+            $allowed_tiers[] = 'loyal';
+        } elseif ($tier === 'vip') {
+            $allowed_tiers[] = 'loyal';
+            $allowed_tiers[] = 'vip';
+        }
+
+        // Tạo placeholder cho câu lệnh IN (...)
+        $placeholders = implode(',', array_fill(0, count($allowed_tiers), '?'));
+        
+        $sql = "SELECT * FROM vouchers WHERE is_active = 1 AND required_tier IN ($placeholders)";
         $stmt = $db->prepare($sql);
-        $stmt->execute([':tier' => $tier]);
+        $stmt->execute($allowed_tiers);
+        
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
         error_log("getAvailableVouchers Error: " . $e->getMessage());
@@ -194,6 +210,9 @@ function createPayment(PDO $db, array $data): bool {
  */
 function getAllBookingsAdmin(PDO $db): array {
     try {
+        // Tự động kiểm tra và cập nhật trạng thái trước khi lấy dữ liệu cho Admin
+        autoUpdateCompletedBookings($db);
+
         $sql = "SELECT b.*, c.model_name, u.fullname, u.email 
                 FROM bookings b 
                 LEFT JOIN cars c ON b.car_id = c.id 
@@ -221,10 +240,29 @@ function updateBookingStatusAdmin(PDO $db, int $booking_id, string $new_status):
 }
 
 /**
+ * Tự động cập nhật trạng thái đơn hàng sang 'completed' nếu đã qua giờ trả xe.
+ */
+function autoUpdateCompletedBookings(PDO $db) {
+    try {
+        // Cập nhật các đơn pending hoặc confirmed đã quá giờ trả xe
+        $sql = "UPDATE bookings 
+                SET status = 'completed' 
+                WHERE status IN ('pending', 'confirmed') 
+                AND dropoff_datetime < NOW()";
+        $db->exec($sql);
+    } catch (PDOException $e) {
+        error_log("autoUpdateCompletedBookings Error: " . $e->getMessage());
+    }
+}
+
+/**
  * Lấy danh sách booking của một user cụ thể
  */
 function getUserBookings(PDO $db, int $user_id): array {
     try {
+        // Tự động kiểm tra và cập nhật trạng thái trước khi lấy dữ liệu cho User
+        autoUpdateCompletedBookings($db);
+
         $sql = "SELECT b.id, b.pickup_datetime, b.dropoff_datetime, b.service_type, b.total_price, b.status, b.created_at, 
                        c.model_name, c.image_url 
                 FROM bookings b 

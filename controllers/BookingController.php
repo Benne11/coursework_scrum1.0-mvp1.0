@@ -134,8 +134,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'book_preview') {
         ];
 
         // Lấy danh sách voucher hợp lệ để hiển thị trong select dropdown
-        $user_tier = $_SESSION['user']['membership_tier'] ?? 'new';
-        $available_vouchers = getAvailableVouchers($db, $user_tier);
+        // Cập nhật Hạng thành viên mới nhất từ DB để tránh Stale Session
+        $user_id = $_SESSION['user']['id'] ?? 0;
+        $stmtTier = $db->prepare("SELECT membership_tier FROM users WHERE id = ?");
+        $stmtTier->execute([$user_id]);
+        $current_tier = $stmtTier->fetchColumn();
+
+        if (!$current_tier) {
+            $current_tier = 'new';
+        }
+        
+        // Cập nhật lại Session
+        $_SESSION['user']['membership_tier'] = $current_tier; 
+        
+        $available_vouchers = getAvailableVouchers($db, $current_tier);
 
         // 5. Hiển thị View hóa đơn nháp
         require_once __DIR__ . '/../views/pages/book_preview.php';

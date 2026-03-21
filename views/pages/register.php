@@ -61,26 +61,26 @@ unset($_SESSION['register_old_data']);
         </div>
     <?php endif; ?>
 
-    <form action="index.php?action=register_submit" method="POST">
+    <form action="index.php?action=register_submit" method="POST" autocomplete="off">
         <div class="form-group">
             <label for="fullname">Full Name</label>
-            <input type="text" id="fullname" name="fullname" value="<?= htmlspecialchars($oldData['fullname'] ?? '') ?>" required placeholder="Enter your full name">
+            <input type="text" id="fullname" name="fullname" value="<?= htmlspecialchars($oldData['fullname'] ?? '') ?>" required placeholder="Enter your full name" autocomplete="off">
         </div>
 
         <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" id="email" name="email" value="<?= htmlspecialchars($oldData['email'] ?? '') ?>" required placeholder="Enter your email">
+            <input type="email" id="email" name="email" value="<?= htmlspecialchars($oldData['email'] ?? '') ?>" required placeholder="Enter your email" autocomplete="off">
         </div>
 
         <div class="form-group">
             <label for="phone">Phone Number</label>
-            <input type="text" id="phone" name="phone" value="<?= htmlspecialchars($oldData['phone'] ?? '') ?>" required placeholder="Enter your phone number">
+            <input type="tel" id="phone" name="phone" value="<?= htmlspecialchars($oldData['phone'] ?? '') ?>" required placeholder="Enter your phone number" autocomplete="view-transition">
         </div>
 
         <div class="form-group">
             <label for="password">Password</label>
             <div class="password-container">
-                <input type="password" id="password" name="password" required placeholder="Enter your password">
+                <input type="password" id="password" name="password" required placeholder="Enter your password" autocomplete="new-password">
                 <span class="toggle-password" onclick="togglePasswordVisibility('password', this)">👁️</span>
             </div>
         </div>
@@ -88,7 +88,7 @@ unset($_SESSION['register_old_data']);
         <div class="form-group">
             <label for="confirm_password">Confirm Password</label>
             <div class="password-container">
-                <input type="password" id="confirm_password" name="confirm_password" required placeholder="Confirm your password">
+                <input type="password" id="confirm_password" name="confirm_password" required placeholder="Confirm your password" autocomplete="new-password">
                 <span class="toggle-password" onclick="togglePasswordVisibility('confirm_password', this)">👁️</span>
             </div>
         </div>
