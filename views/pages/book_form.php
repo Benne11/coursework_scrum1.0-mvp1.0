@@ -138,18 +138,21 @@ if (isset($_SESSION['error_message'])) {
             color: #ffc107;
         }
 
-        .btn-back-link {
-            display: inline-block;
-            margin-bottom: 20px;
-            color: #6c757d;
+        .btn-back {
+            display: inline-flex;
             text-decoration: none;
+            color: #1a1a1a;
             font-weight: 600;
+            font-size: 16px;
+            padding: 10px 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: all 0.3s;
         }
-        .btn-back-link:hover { color: #1a1a1a; }
-
-        @media (max-width: 768px) {
-            .booking-wrapper { flex-direction: column; }
-            .car-summary-col { border-right: none; border-bottom: 1px solid #eee; }
+        .btn-back:hover {
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transform: translateX(-3px);
         }
     </style>
 </head>
@@ -171,7 +174,7 @@ if (isset($_SESSION['error_message'])) {
 </div>
 
 <div class="container">
-    <a href="index.php?action=car_detail&id=<?= htmlspecialchars($car['id']) ?>" class="btn-back-link">&larr; Back to Car Details</a>
+    <a href="index.php?action=car_detail&id=<?= htmlspecialchars($car['id']) ?>" class="btn-back">&larr; Back to Car Details</a>
     
     <?php if ($errorMessage): ?>
         <div class="alert-danger"><?= htmlspecialchars($errorMessage) ?></div>
