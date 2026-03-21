@@ -214,9 +214,10 @@
     <div class="nav-links">
         <a href="index.php?action=home">Home</a>
         <?php if (isset($_SESSION['user'])): ?>
-            <?php if (isset($_SESSION['user']['role']) && $_SESSION['user']['role'] === 'admin'): ?>
+            <a href="index.php?action=browse_cars">Browse Cars</a>
+            <!--<?php if (isset($_SESSION['user']['role']) && $_SESSION['user']['role'] === 'admin'): ?>
                 <a href="index.php?action=admin_dashboard" style="color: #ffc107;">Admin Panel</a>
-            <?php endif; ?>
+            <?php endif; ?>-->
             <a href="index.php?action=my_bookings">My Bookings</a>
             <a href="index.php?action=logout">Logout (<?= htmlspecialchars($_SESSION['user']['fullname']) ?>)</a>
         <?php else: ?>
