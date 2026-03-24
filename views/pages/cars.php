@@ -32,7 +32,7 @@
             align-items: center; 
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
-        .navbar .logo strong { font-size: 24px; letter-spacing: 1px; color: #ffc107;}
+        .navbar .logo strong { font-size: 24px; letter-spacing: 1px; color: #f48f0c;}
         .navbar a { 
             color: #fff; 
             text-decoration: none; 
@@ -40,7 +40,7 @@
             font-weight: 500;
             transition: color 0.3s;
         }
-        .navbar a:hover { color: #ffc107; }
+        .navbar a:hover { color: #f48f0c; }
 
         /* User Context Fix */
         .nav-links {
@@ -94,7 +94,7 @@
         }
         .filter-form input[type="text"]:focus,
         .filter-form select:focus {
-            border-color: #ffc107;
+            border-color: #f48f0c;
         }
         .filter-form button {
             padding: 12px 30px;
@@ -109,7 +109,7 @@
             text-transform: uppercase;
         }
         .filter-form button:hover {
-            background-color: #ffc107;
+            background-color: #f48f0c;
             color: #1a1a1a;
         }
         .filter-form .reset-btn {
@@ -209,7 +209,7 @@
             padding: 12px;
             border-radius: 8px;
             margin-bottom: 20px;
-            border-left: 4px solid #ffc107;
+            border-left: 4px solid #f48f0c;
         }
         .car-price { font-size: 18px; color: #dc3545; font-weight: bold; line-height: 1.4;}
         .car-price-sub { font-size: 14px; color: #6c757d; }
@@ -243,16 +243,16 @@
         }
         .btn-instant {
             flex: 1; /* Chiếm 1/3 */
-            background-color: #ffc107;
+            background-color: #f48f0c;
             color: #1a1a1a;
         }
         .btn-book:hover { 
-            background-color: #ffc107; 
+            background-color: #f48f0c; 
             color: #1a1a1a;
         }
         .btn-instant:hover {
             background-color: #1a1a1a;
-            color: #ffc107;
+            color: #f48f0c;
         }
     </style>
 </head>
@@ -266,7 +266,7 @@
         <?php if (isset($_SESSION['user'])): ?>
             <a href="index.php?action=my_bookings">My Bookings</a>
             <span class="user-greeting">Hi, <?= htmlspecialchars($_SESSION['user']['fullname']) ?></span>
-            <a href="index.php?action=logout" style="color: orange;">Logout</a>
+            <a href="index.php?action=logout" style="color: #f48f0c;">Logout</a>
         <?php else: ?>
             <a href="index.php?action=login_form">Login</a>
         <?php endif; ?>

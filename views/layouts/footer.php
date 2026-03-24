@@ -46,7 +46,7 @@
         transition: color 0.3s;
     }
     .footer-col ul li a:hover {
-        color: #ffc107;
+        color: #f48f0c;
     }
     .footer-bottom {
         text-align: center;
@@ -75,7 +75,7 @@
     <div class="footer-container">
         <!-- Column 1 -->
         <div class="footer-col">
-            <h4 style="color: #ffc107; font-size: 22px; letter-spacing: 1px;">Born Car</h4>
+            <h4 style="color: #f48f0c; font-size: 22px; letter-spacing: 1px;">Born Car</h4>
             <p>Drive your dreams with our premium car rental service. Comfort, safety, and reliability in every mile.</p>
             <p><strong>Company:</strong> Born Car JSC</p>
             <p><strong>Tax Code:</strong> 0123456789</p>

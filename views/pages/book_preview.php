@@ -36,12 +36,13 @@ $durationText = ($diffHours < 24) ? "{$diffHours} Hours" : "{$diffDays} Days";
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Booking Preview | Born Car</title>
+    <link rel="stylesheet" href="css/style.css">
     <style>
         body { background-color: #f4f6f8; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; color: #333;}
         .navbar { background-color: #1a1a1a; padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; color: white;}
-        .navbar .logo strong { font-size: 24px; color: #ffc107;}
+        .navbar .logo strong { font-size: 24px; color: #f48f0c;}
         .navbar a { color: #fff; text-decoration: none; margin-left: 20px;}
-        .navbar a:hover { color: #ffc107;}
+        .navbar a:hover { color: #f48f0c;}
 
         .preview-container {
             max-width: 800px;
@@ -103,7 +104,7 @@ $durationText = ($diffHours < 24) ? "{$diffHours} Hours" : "{$diffDays} Days";
 
         .total-box {
             background: #fff9e6;
-            border: 2px solid #ffc107;
+            border: 2px solid #f48f0c;
             padding: 20px;
             border-radius: 8px;
             text-align: center;
@@ -135,7 +136,7 @@ $durationText = ($diffHours < 24) ? "{$diffHours} Hours" : "{$diffDays} Days";
             text-transform: uppercase;
         }
         .voucher-box input[type="text"]:focus {
-            border-color: #ffc107;
+            border-color: #f48f0c;
         }
         .voucher-box button {
             padding: 12px 25px;
@@ -148,7 +149,7 @@ $durationText = ($diffHours < 24) ? "{$diffHours} Hours" : "{$diffDays} Days";
             transition: 0.3s;
         }
         .voucher-box button:hover {
-            background: #ffc107;
+            background: #f48f0c;
             color: #1a1a1a;
         }
 
@@ -184,7 +185,7 @@ $durationText = ($diffHours < 24) ? "{$diffHours} Hours" : "{$diffDays} Days";
         .btn-confirm {
             flex: 2;
             padding: 15px;
-            background: #ffc107;
+            background: #f48f0c;
             color: #1a1a1a;
             border: none;
             font-size: 16px;
@@ -194,7 +195,7 @@ $durationText = ($diffHours < 24) ? "{$diffHours} Hours" : "{$diffDays} Days";
             transition: all 0.3s;
             text-transform: uppercase;
         }
-        .btn-confirm:hover { background: #1a1a1a; color: #ffc107; }
+        .btn-confirm:hover { background: #1a1a1a; color: #f48f0c; }
 
         @media (max-width: 600px) {
             .details-grid { grid-template-columns: 1fr; }
@@ -203,6 +204,7 @@ $durationText = ($diffHours < 24) ? "{$diffHours} Hours" : "{$diffDays} Days";
             .action-buttons { flex-direction: column; }
         }
     </style>
+        
 </head>
 <body>
 
@@ -212,7 +214,7 @@ $durationText = ($diffHours < 24) ? "{$diffHours} Hours" : "{$diffDays} Days";
         <a href="index.php?action=home">Home</a>
         <?php if (isset($_SESSION['user'])): ?>
             <?php if (isset($_SESSION['user']['role']) && $_SESSION['user']['role'] === 'admin'): ?>
-                <!--<a href="index.php?action=admin_dashboard" style="color: #ffc107;">Admin Panel</a>-->
+                <!--<a href="index.php?action=admin_dashboard" style="color: #f48f0c;">Admin Panel</a>-->
             <?php endif; ?>
             <a href="index.php?action=my_bookings">My Bookings</a>
             <a href="index.php?action=logout">Logout (<?= htmlspecialchars($_SESSION['user']['fullname']) ?>)</a>

@@ -15,12 +15,12 @@
         
         /* Sidebar */
         .sidebar { width: 250px; background-color: #2c3e50; color: #fff; display: flex; flex-direction: column; flex-shrink: 0; }
-        .sidebar-header { padding: 20px; background-color: #1a252f; text-align: center; border-bottom: 2px solid #ffc107; }
-        .sidebar-header h2 { color: #ffc107; font-size: 22px; margin-bottom: 5px; }
+        .sidebar-header { padding: 20px; background-color: #1a252f; text-align: center; border-bottom: 2px solid #f48f0c; }
+        .sidebar-header h2 { color: #f48f0c; font-size: 22px; margin-bottom: 5px; }
         .sidebar-header span { font-size: 12px; color: #bdc3c7; }
         .sidebar-nav { flex-grow: 1; padding: 20px 0; }
         .sidebar-nav a { display: flex; align-items: center; padding: 15px 25px; color: #bdc3c7; text-decoration: none; transition: 0.3s; border-left: 4px solid transparent; }
-        .sidebar-nav a:hover, .sidebar-nav a.active { background-color: #34495e; color: #fff; border-left-color: #ffc107; }
+        .sidebar-nav a:hover, .sidebar-nav a.active { background-color: #34495e; color: #fff; border-left-color: #f48f0c; }
         .sidebar-nav a i { width: 25px; font-size: 18px; }
         .sidebar-footer { padding: 20px; text-align: center; border-top: 1px solid #34495e; }
         .btn-back { display: inline-block; padding: 10px 20px; background-color: #e74c3c; color: white; text-decoration: none; border-radius: 5px; transition: 0.3s; font-weight: bold; width: 100%; }
@@ -142,7 +142,7 @@
                                     <td><?= date('d/m/Y H:i', strtotime($user['created_at'] ?? 'now')) ?></td>
                                     <td style="padding: 10px; border: 1px solid #ddd;">
                                         <!-- Nút Edit (Link GET) -->
-                                        <a href="index.php?action=admin_edit_user&id=<?= $user['id'] ?>" style="background:#ffc107; color:#000; padding:5px 10px; text-decoration:none; border-radius:5px; margin-right:5px;">Edit</a>
+                                        <a href="index.php?action=admin_edit_user&id=<?= $user['id'] ?>" style="background:#f48f0c; color:#000; padding:5px 10px; text-decoration:none; border-radius:5px; margin-right:5px;">Edit</a>
                                         
                                         <?php if(($user['id'] ?? '') !== $_SESSION['user']['id']): ?>
                                         <!-- Nút Delete (Form POST) -->

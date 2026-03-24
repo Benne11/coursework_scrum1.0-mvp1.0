@@ -27,12 +27,12 @@
 
         /* Sidebar Styles (Reused from Dashboard) */
         .sidebar { width: 250px; background-color: #2c3e50; color: #fff; display: flex; flex-direction: column; flex-shrink: 0; }
-        .sidebar-header { padding: 20px; background-color: #1a252f; text-align: center; border-bottom: 2px solid #ffc107; }
-        .sidebar-header h2 { color: #ffc107; font-size: 22px; margin-bottom: 5px; }
+        .sidebar-header { padding: 20px; background-color: #1a252f; text-align: center; border-bottom: 2px solid #f48f0c; }
+        .sidebar-header h2 { color: #f48f0c; font-size: 22px; margin-bottom: 5px; }
         .sidebar-header span { font-size: 12px; color: #bdc3c7; }
         .sidebar-nav { flex-grow: 1; padding: 20px 0; }
         .sidebar-nav a { display: flex; align-items: center; padding: 15px 25px; color: #bdc3c7; text-decoration: none; transition: 0.3s; border-left: 4px solid transparent; }
-        .sidebar-nav a:hover, .sidebar-nav a.active { background-color: #34495e; color: #fff; border-left-color: #ffc107; }
+        .sidebar-nav a:hover, .sidebar-nav a.active { background-color: #34495e; color: #fff; border-left-color: #f48f0c; }
         .sidebar-nav a i { margin-right: 15px; width: 20px; text-align: center; }
         .sidebar-footer { padding: 20px; }
         .btn-back { display: block; width: 100%; padding: 10px; background-color: #e74c3c; color: #fff; text-align: center; text-decoration: none; border-radius: 5px; font-weight: bold; transition: 0.3s; }
@@ -183,7 +183,7 @@
                                         ?>
                                     </td>
                                     <td class="action-btns">
-                                        <a href="index.php?action=admin_edit_car&id=<?= htmlspecialchars($car['id'] ?? 0) ?>" class="btn-edit" style="background:#ffc107; color:#000; padding:5px 10px; text-decoration:none; border-radius:5px;"><i class="fas fa-edit"></i> Edit</a>
+                                        <a href="index.php?action=admin_edit_car&id=<?= htmlspecialchars($car['id'] ?? 0) ?>" class="btn-edit" style="background:#f48f0c; color:#000; padding:5px 10px; text-decoration:none; border-radius:5px;"><i class="fas fa-edit"></i> Edit</a>
                                         
                                         <form method="POST" action="index.php?action=admin_delete_car" style="display:inline-block;" onsubmit="return confirm('Are you sure you want to delete this car?');">
                                             <input type="hidden" name="car_id" value="<?= htmlspecialchars($car['id'] ?? '') ?>">

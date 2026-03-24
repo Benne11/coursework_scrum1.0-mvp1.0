@@ -24,7 +24,7 @@ if (!empty($booking)) {
     .edit-header h2 { color: #2c3e50; font-size: 28px; margin-bottom: 10px; }
     .edit-header p { color: #7f8c8d; font-size: 15px; }
 
-    .car-info-card { display: flex; align-items: center; background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 25px; border-left: 4px solid #ffc107; }
+    .car-info-card { display: flex; align-items: center; background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 25px; border-left: 4px solid #f48f0c; }
     .car-info-card img { width: 100px; height: auto; border-radius: 5px; margin-right: 20px; object-fit: cover; }
     .car-info-card h4 { margin: 0 0 5px 0; color: #333; font-size: 18px; }
     .car-info-card span { font-size: 14px; color: #666; }
@@ -32,7 +32,7 @@ if (!empty($booking)) {
     .form-group { margin-bottom: 20px; }
     .form-group label { display: block; font-weight: bold; margin-bottom: 8px; color: #34495e; }
     .form-group input, .form-group select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 15px; transition: 0.3s; }
-    .form-group input:focus, .form-group select:focus { border-color: #ffc107; outline: none; box-shadow: 0 0 5px rgba(255, 193, 7, 0.3); }
+    .form-group input:focus, .form-group select:focus { border-color: #f48f0c; outline: none; box-shadow: 0 0 5px rgba(244, 143, 12, 0.3); }
 
     .form-row { display: flex; gap: 20px; }
     .form-col { flex: 1; }

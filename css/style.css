@@ -1,0 +1,312 @@
+
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #f4f6f8; 
+            margin: 0; 
+            color: #333;
+        }
+        
+        /* Navbar */
+        .navbar { 
+            background-color: #1a1a1a; 
+            color: #fff; 
+            padding: 15px 40px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+        .navbar .logo strong { font-size: 24px; color: #ffc107; letter-spacing: 1px;}
+        .navbar a { color: #fff; text-decoration: none; margin-left: 20px; font-weight: 500;}
+        .navbar a:hover { color: #ffc107; }
+
+        .container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
+        
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #f5c6cb;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .booking-wrapper {
+            display: flex;
+            gap: 40px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            overflow: hidden;
+            align-items: stretch;
+        }
+
+        /* Left Side: Car Summary */
+        .car-summary-col {
+            flex: 1;
+            background: #f8f9fa;
+            padding: 40px;
+            border-right: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+        }
+        .car-summary-col h2 { margin-top: 0; color: #1a1a1a; font-size: 24px; }
+        .car-summary-col img {
+            width: 100%;
+            border-radius: 10px;
+            object-fit: cover;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .price-box {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid #ffc107;
+            margin-top: auto;
+        }
+        .price-box .day-rate { font-size: 24px; font-weight: bold; color: #dc3545;}
+        .price-box .hour-rate { font-size: 14px; color: #6c757d; margin-top: 5px;}
+
+        /* Right Side: Form */
+        .booking-form-col {
+            flex: 1.2;
+            padding: 40px;
+        }
+        .booking-form-col h3 { margin-top: 0; margin-bottom: 25px; color: #1a1a1a; font-size: 22px;}
+        
+        .form-group { margin-bottom: 20px; }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+        }
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            font-size: 16px;
+            font-family: inherit;
+            box-sizing: border-box;
+            background-color: #fdfdfd;
+            transition: border-color 0.3s;
+        }
+        .form-control:focus {
+            border-color: #ffc107;
+            outline: none;
+            background-color: #fff;
+            box-shadow: 0 0 0 3px rgba(255,193,7,0.2);
+        }
+        
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background-color: #ffc107;
+            color: #1a1a1a;
+            border: none;
+            border-radius: 6px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 10px;
+        }
+        .btn-submit:hover {
+            background-color: #1a1a1a;
+            color: #ffc107;
+        }
+
+        .btn-back {
+            display: inline-flex;
+            text-decoration: none;
+            color: #1a1a1a;
+            font-weight: 600;
+            font-size: 16px;
+            padding: 10px 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+            margin-bottom: 30px; /* Thêm khoảng cách ở dưới nút */
+        }
+        .btn-back:hover {
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transform: translateX(-3px);
+        }
+        .btn-inforcar{
+            margin-bottom: 20px; 
+            font-size: 15px; 
+            color: #555;
+        }
+        body { background-color: #f4f6f8; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; color: #333;}
+        .navbar { background-color: #1a1a1a; padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; color: white;}
+        .navbar .logo strong { font-size: 24px; color: #ffc107;}
+        .navbar a { color: #fff; text-decoration: none; margin-left: 20px;}
+        .navbar a:hover { color: #ffc107;}
+
+        .preview-container {
+            max-width: 800px;
+            margin: 50px auto 100px;
+            background: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        .title { text-align: center; color: #1a1a1a; font-size: 32px; margin-top: 0; margin-bottom: 30px; font-weight: 800; border-bottom: 2px dashed #eee; padding-bottom: 15px;}
+        
+        .car-summary { display: flex; gap: 20px; align-items: center; margin-bottom: 30px; background: #f8f9fa; padding: 20px; border-radius: 8px;}
+        .car-summary img { width: 180px; height: 120px; object-fit: cover; border-radius: 8px;}
+        .car-summary div { flex: 1; }
+        .car-summary h3 { margin: 0 0 10px; font-size: 24px; color: #1a1a1a;}
+        .car-summary p { margin: 0; color: #666; font-size: 15px;}
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .detail-item { background: #fff; border: 1px solid #e9ecef; padding: 15px; border-radius: 8px; }
+        .detail-item label { display: block; font-size: 12px; color: #888; text-transform: uppercase; font-weight: bold; margin-bottom: 5px;}
+        .detail-item span { font-size: 16px; font-weight: 600; color: #1a1a1a;}
+
+        /* Price Breakdown CSS */
+        .breakdown-box {
+            background: #fff;
+            border: 1px solid #e9ecef;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .breakdown-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px dashed #eee;
+        }
+        .breakdown-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .breakdown-row.discount-row {
+            color: #28a745;
+            font-weight: 600;
+        }
+        .breakdown-row.subtotal-row {
+            font-weight: bold;
+            color: #1a1a1a;
+        }
+
+        .total-box {
+            background: #fff9e6;
+            border: 2px solid #ffc107;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .total-box label { font-size: 18px; color: #1a1a1a; margin: 0; font-weight: 700; text-transform: uppercase;}
+        .total-box .price { font-size: 32px; color: #d32f2f; font-weight: 900;}
+
+        /* Voucher Form CSS */
+        .voucher-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .voucher-box input[type="text"] {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            font-size: 15px;
+            outline: none;
+            text-transform: uppercase;
+        }
+        .voucher-box input[type="text"]:focus {
+            border-color: #ffc107;
+        }
+        .voucher-box button {
+            padding: 12px 25px;
+            background: #1a1a1a;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .voucher-box button:hover {
+            background: #ffc107;
+            color: #1a1a1a;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #f5c6cb;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+        }
+        .btn-back {
+            flex: 1;
+            padding: 15px;
+            background: #e9ecef;
+            color: #1a1a1a;
+            text-decoration: none;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 6px;
+            transition: background 0.3s;
+        }
+        .btn-back:hover { background: #dde2e6; }
+        
+        .btn-confirm {
+            flex: 2;
+            padding: 15px;
+            background: #ffc107;
+            color: #1a1a1a;
+            border: none;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+        }
+        .btn-confirm:hover { background: #1a1a1a; color: #ffc107; }
+
+        @media (max-width: 600px) {
+            .details-grid { grid-template-columns: 1fr; }
+            .car-summary { flex-direction: column; text-align: center;}
+            .car-summary img { width: 100%; height: auto;}
+            .action-buttons { flex-direction: column; }
+        }
+    

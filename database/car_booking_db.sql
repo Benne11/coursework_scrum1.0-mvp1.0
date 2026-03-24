@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Mar 21, 2026 at 01:20 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Máy chủ: 127.0.0.1
+-- Thời gian đã tạo: Th3 24, 2026 lúc 03:40 AM
+-- Phiên bản máy phục vụ: 10.4.32-MariaDB
+-- Phiên bản PHP: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,13 +18,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `car_booking_db`
+-- Cơ sở dữ liệu: `car_booking_db`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `bookings`
+-- Cấu trúc bảng cho bảng `bookings`
 --
 
 CREATE TABLE `bookings` (
@@ -40,7 +40,7 @@ CREATE TABLE `bookings` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `bookings`
+-- Đang đổ dữ liệu cho bảng `bookings`
 --
 
 INSERT INTO `bookings` (`id`, `user_id`, `car_id`, `pickup_datetime`, `dropoff_datetime`, `service_type`, `total_price`, `status`, `created_at`) VALUES
@@ -53,15 +53,14 @@ INSERT INTO `bookings` (`id`, `user_id`, `car_id`, `pickup_datetime`, `dropoff_d
 (11, 1, 6, '2026-03-19 15:12:00', '2026-03-21 15:12:00', 'self-drive', 1700000.00, 'completed', '2026-03-19 08:12:31'),
 (13, 1, 8, '2026-03-19 15:21:00', '2026-03-21 15:21:00', 'with-driver', 2430000.00, 'completed', '2026-03-19 08:21:10'),
 (14, 1, 8, '2026-03-19 15:22:00', '2026-03-21 15:22:00', 'with-driver', 2700000.00, 'completed', '2026-03-19 08:22:53'),
-(15, 1, 8, '2026-03-20 09:38:00', '2026-03-21 11:38:00', 'self-drive', 1700000.00, 'completed', '2026-03-20 03:39:13'),
-(16, 1, 25, '2026-03-21 17:35:00', '2026-03-21 21:35:00', 'with-driver', 558000.00, 'cancelled', '2026-03-21 10:35:23'),
-(17, 1, 6, '2026-03-21 18:59:00', '2026-03-22 18:59:00', 'with-driver', 1215000.00, 'cancelled', '2026-03-21 11:59:57'),
-(18, 3, 18, '2026-03-21 19:15:00', '2026-03-24 19:15:00', 'with-driver', 7500000.00, 'confirmed', '2026-03-21 12:15:58');
+(15, 1, 5, '2026-03-19 20:01:00', '2026-03-21 20:01:00', 'with-driver', 2600000.00, 'completed', '2026-03-19 13:01:18'),
+(16, 1, 25, '2026-03-19 20:18:00', '2026-03-20 20:18:00', 'self-drive', 180000.00, 'completed', '2026-03-19 13:18:42'),
+(19, 1, 5, '2026-03-25 09:13:00', '2026-03-26 09:13:00', 'self-drive', 800000.00, 'confirmed', '2026-03-24 02:13:19');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `cars`
+-- Cấu trúc bảng cho bảng `cars`
 --
 
 CREATE TABLE `cars` (
@@ -80,7 +79,7 @@ CREATE TABLE `cars` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `cars`
+-- Đang đổ dữ liệu cho bảng `cars`
 --
 
 INSERT INTO `cars` (`id`, `model_name`, `category`, `seats`, `fuel_type`, `transmission`, `price_per_day`, `price_per_hour`, `image_url`, `description`, `is_available`, `created_at`) VALUES
@@ -107,7 +106,7 @@ INSERT INTO `cars` (`id`, `model_name`, `category`, `seats`, `fuel_type`, `trans
 -- --------------------------------------------------------
 
 --
--- Table structure for table `payments`
+-- Cấu trúc bảng cho bảng `payments`
 --
 
 CREATE TABLE `payments` (
@@ -121,7 +120,7 @@ CREATE TABLE `payments` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `payments`
+-- Đang đổ dữ liệu cho bảng `payments`
 --
 
 INSERT INTO `payments` (`id`, `booking_id`, `payment_method`, `amount`, `payment_status`, `transaction_id`, `created_at`) VALUES
@@ -134,15 +133,13 @@ INSERT INTO `payments` (`id`, `booking_id`, `payment_method`, `amount`, `payment
 (10, 11, 'bank_transfer', 1700000.00, 'completed', 'TXN69BBAFF0D72251773907952', '2026-03-19 08:12:32'),
 (12, 13, 'bank_transfer', 2430000.00, 'completed', 'TXN69BBB1F9666E51773908473', '2026-03-19 08:21:13'),
 (13, 14, 'bank_transfer', 2700000.00, 'completed', 'TXN69BBB2603AAB21773908576', '2026-03-19 08:22:56'),
-(14, 15, 'cash', 99000.00, 'completed', 'TXN69BCC162DDC231773977954', '2026-03-20 03:39:14'),
-(15, 16, 'credit_card', 558000.00, 'completed', 'TXN69BE747BB9FC91774089339', '2026-03-21 10:35:39'),
-(16, 17, 'cash', 1215000.00, 'completed', 'TXN69BE88613FD781774094433', '2026-03-21 12:00:33'),
-(17, 18, 'cash', 7500000.00, 'completed', 'TXN69BE8BFFD7F5F1774095359', '2026-03-21 12:15:59');
+(14, 16, 'cash', 180000.00, 'completed', 'TXN69BBF7BB7A4281773926331', '2026-03-19 13:18:51'),
+(17, 19, 'cash', 800000.00, 'completed', 'TXN69C1F340B2BAB1774318400', '2026-03-24 02:13:20');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Cấu trúc bảng cho bảng `users`
 --
 
 CREATE TABLE `users` (
@@ -157,21 +154,23 @@ CREATE TABLE `users` (
   `is_active` tinyint(1) DEFAULT 0,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `membership_tier` enum('new','loyal','vip') DEFAULT 'new'
+  `membership_tier` enum('new','loyal','vip') DEFAULT 'new',
+  `otp_code` varchar(6) DEFAULT NULL,
+  `is_verified` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `users`
+-- Đang đổ dữ liệu cho bảng `users`
 --
 
-INSERT INTO `users` (`id`, `fullname`, `email`, `phone`, `password_hash`, `address`, `avatar_url`, `role`, `is_active`, `created_at`, `updated_at`, `membership_tier`) VALUES
-(1, 'Minh Hoang', 'tan0979876976@gmail.com', '0907495718', '$2y$10$T/gtH5jFuVwPO0vKs/X5dOC5JEU1p5AivhR8UBcqrGTE6e7x17LOG', NULL, NULL, 'admin', 0, '2026-03-19 05:20:41', '2026-03-21 12:17:59', 'loyal'),
-(3, 'Tran Van Tan', 'tantvgcs220674@fpt.edu.vn', '0979876976', '$2y$10$mlm4Vi8kGYGQsrRo7lwzk.t09M0fcw2hY6z3lqA.7Zrv2Lpo5TblW', NULL, NULL, 'customer', 0, '2026-03-19 09:51:57', '2026-03-19 09:52:19', 'vip');
+INSERT INTO `users` (`id`, `fullname`, `email`, `phone`, `password_hash`, `address`, `avatar_url`, `role`, `is_active`, `created_at`, `updated_at`, `membership_tier`, `otp_code`, `is_verified`) VALUES
+(1, 'Minh Hoang', 'tan0979876976@gmail.com', '0907495718', '$2y$10$T/gtH5jFuVwPO0vKs/X5dOC5JEU1p5AivhR8UBcqrGTE6e7x17LOG', NULL, NULL, 'admin', 0, '2026-03-19 05:20:41', '2026-03-22 00:39:12', 'vip', NULL, 0),
+(5, 'Benne11', 'tantvgcs220674@fpt.edu.vn', '0907495711', '$2y$10$c1jPCpreQ.cJ5ueT6WJJ9u2yPNz3dy8jUd4Cdp9LS9w7rCNeMyKKy', NULL, NULL, 'customer', 1, '2026-03-22 00:40:09', '2026-03-22 00:41:32', 'new', NULL, 1);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `vouchers`
+-- Cấu trúc bảng cho bảng `vouchers`
 --
 
 CREATE TABLE `vouchers` (
@@ -184,7 +183,7 @@ CREATE TABLE `vouchers` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `vouchers`
+-- Đang đổ dữ liệu cho bảng `vouchers`
 --
 
 INSERT INTO `vouchers` (`id`, `code`, `discount_percent`, `is_active`, `created_at`, `required_tier`) VALUES
@@ -193,11 +192,11 @@ INSERT INTO `vouchers` (`id`, `code`, `discount_percent`, `is_active`, `created_
 (3, 'VIPMAX25', 25.00, 1, '2026-03-19 07:45:20', 'vip');
 
 --
--- Indexes for dumped tables
+-- Chỉ mục cho các bảng đã đổ
 --
 
 --
--- Indexes for table `bookings`
+-- Chỉ mục cho bảng `bookings`
 --
 ALTER TABLE `bookings`
   ADD PRIMARY KEY (`id`),
@@ -205,79 +204,79 @@ ALTER TABLE `bookings`
   ADD KEY `car_id` (`car_id`);
 
 --
--- Indexes for table `cars`
+-- Chỉ mục cho bảng `cars`
 --
 ALTER TABLE `cars`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `payments`
+-- Chỉ mục cho bảng `payments`
 --
 ALTER TABLE `payments`
   ADD PRIMARY KEY (`id`),
   ADD KEY `booking_id` (`booking_id`);
 
 --
--- Indexes for table `users`
+-- Chỉ mục cho bảng `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `email` (`email`);
 
 --
--- Indexes for table `vouchers`
+-- Chỉ mục cho bảng `vouchers`
 --
 ALTER TABLE `vouchers`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `code` (`code`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT cho các bảng đã đổ
 --
 
 --
--- AUTO_INCREMENT for table `bookings`
+-- AUTO_INCREMENT cho bảng `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
--- AUTO_INCREMENT for table `cars`
+-- AUTO_INCREMENT cho bảng `cars`
 --
 ALTER TABLE `cars`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
--- AUTO_INCREMENT for table `payments`
+-- AUTO_INCREMENT cho bảng `payments`
 --
 ALTER TABLE `payments`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
--- AUTO_INCREMENT for table `users`
+-- AUTO_INCREMENT cho bảng `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT for table `vouchers`
+-- AUTO_INCREMENT cho bảng `vouchers`
 --
 ALTER TABLE `vouchers`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- Constraints for dumped tables
+-- Các ràng buộc cho các bảng đã đổ
 --
 
 --
--- Constraints for table `bookings`
+-- Các ràng buộc cho bảng `bookings`
 --
 ALTER TABLE `bookings`
   ADD CONSTRAINT `bookings_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `bookings_ibfk_2` FOREIGN KEY (`car_id`) REFERENCES `cars` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `payments`
+-- Các ràng buộc cho bảng `payments`
 --
 ALTER TABLE `payments`
   ADD CONSTRAINT `payments_ibfk_1` FOREIGN KEY (`booking_id`) REFERENCES `bookings` (`id`) ON DELETE CASCADE;

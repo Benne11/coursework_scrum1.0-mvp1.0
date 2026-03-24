@@ -26,9 +26,9 @@
             justify-content: space-between; 
             align-items: center; 
         }
-        .navbar .logo strong { font-size: 24px; color: #ffc107; letter-spacing: 1px;}
+        .navbar .logo strong { font-size: 24px; color: #f48f0c; letter-spacing: 1px;}
         .navbar a { color: #fff; text-decoration: none; margin-left: 20px; font-weight: 500;}
-        .navbar a:hover { color: #ffc107; }
+        .navbar a:hover { color: #f48f0c; }
 
         .container {
             max-width: 1000px;
@@ -41,7 +41,7 @@
             color: #1a1a1a;
             margin-bottom: 20px;
             font-weight: 800;
-            border-bottom: 3px solid #ffc107;
+            border-bottom: 3px solid #f48f0c;
             display: inline-block;
             padding-bottom: 10px;
         }
@@ -178,7 +178,7 @@
         .no-data a {
             display: inline-block;
             margin-top: 15px;
-            background: #ffc107;
+            background: #f48f0c;
             color: #1a1a1a;
             padding: 10px 25px;
             text-decoration: none;
@@ -186,7 +186,7 @@
             border-radius: 5px;
         }
         .btn-edit {
-            background-color: #ffc107; /* Màu vàng thương hiệu */
+            background-color: #f48f0c; /* Màu vàng thương hiệu */
             color: #1a1a1a;
             text-decoration: none;
             padding: 10px 20px;
@@ -216,7 +216,7 @@
         <?php if (isset($_SESSION['user'])): ?>
             <a href="index.php?action=browse_cars">Browse Cars</a>
             <!--<?php if (isset($_SESSION['user']['role']) && $_SESSION['user']['role'] === 'admin'): ?>
-                <a href="index.php?action=admin_dashboard" style="color: #ffc107;">Admin Panel</a>
+                <a href="index.php?action=admin_dashboard" style="color: #f48f0c;">Admin Panel</a>
             <?php endif; ?>-->
             <a href="index.php?action=my_bookings">My Bookings</a>
             <a href="index.php?action=logout">Logout (<?= htmlspecialchars($_SESSION['user']['fullname']) ?>)</a>

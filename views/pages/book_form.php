@@ -14,6 +14,7 @@ if (isset($_SESSION['error_message'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book <?= htmlspecialchars($car['model_name']) ?> | Born Car</title>
+    <link rel="stylesheet" href="css/style.css">
     <style>
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
@@ -31,9 +32,9 @@ if (isset($_SESSION['error_message'])) {
             justify-content: space-between; 
             align-items: center; 
         }
-        .navbar .logo strong { font-size: 24px; color: #ffc107; letter-spacing: 1px;}
+        .navbar .logo strong { font-size: 24px; color: #f48f0c; letter-spacing: 1px;}
         .navbar a { color: #fff; text-decoration: none; margin-left: 20px; font-weight: 500;}
-        .navbar a:hover { color: #ffc107; }
+        .navbar a:hover { color: #f48f0c; }
 
         .container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
         
@@ -80,7 +81,7 @@ if (isset($_SESSION['error_message'])) {
             padding: 20px;
             border-radius: 8px;
             text-align: center;
-            border: 2px solid #ffc107;
+            border: 2px solid #f48f0c;
             margin-top: auto;
         }
         .price-box .day-rate { font-size: 24px; font-weight: bold; color: #dc3545;}
@@ -112,7 +113,7 @@ if (isset($_SESSION['error_message'])) {
             transition: border-color 0.3s;
         }
         .form-control:focus {
-            border-color: #ffc107;
+            border-color: #f48f0c;
             outline: none;
             background-color: #fff;
             box-shadow: 0 0 0 3px rgba(255,193,7,0.2);
@@ -121,7 +122,7 @@ if (isset($_SESSION['error_message'])) {
         .btn-submit {
             width: 100%;
             padding: 16px;
-            background-color: #ffc107;
+            background-color: #f48f0c;
             color: #1a1a1a;
             border: none;
             border-radius: 6px;
@@ -135,7 +136,7 @@ if (isset($_SESSION['error_message'])) {
         }
         .btn-submit:hover {
             background-color: #1a1a1a;
-            color: #ffc107;
+            color: #f48f0c;
         }
 
         .btn-back {
@@ -155,6 +156,11 @@ if (isset($_SESSION['error_message'])) {
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             transform: translateX(-3px);
         }
+        .btn-inforcar{
+            margin-bottom: 20px; 
+            font-size: 15px; 
+            color: #555;
+        }
     </style>
 </head>
 <body>
@@ -166,7 +172,7 @@ if (isset($_SESSION['error_message'])) {
         <a href="index.php?action=browse_cars">Browse Cars</a>
         <?php if (isset($_SESSION['user'])): ?>
             <?php if (isset($_SESSION['user']['role']) && $_SESSION['user']['role'] === 'admin'): ?>
-                <!--<a href="index.php?action=admin_dashboard" style="color: #ffc107;">Admin Panel</a>-->
+                <!--<a href="index.php?action=admin_dashboard" style="color: #f48f0c;">Admin Panel</a>-->
             <?php endif; ?>
             <a href="index.php?action=my_bookings">My Bookings</a>
             <a href="index.php?action=logout">Logout (<?= htmlspecialchars($_SESSION['user']['fullname']) ?>)</a>
@@ -190,7 +196,7 @@ if (isset($_SESSION['error_message'])) {
                 alt="<?= htmlspecialchars($car['model_name']) ?>"
                 onerror="this.src='https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=600&q=80'"
             >
-            <div style="margin-bottom: 20px; font-size: 15px; color: #555;">
+            <div class="btn-inforcar">
                 <strong>Category:</strong> <?= htmlspecialchars($car['category']) ?> &bull; 
                 <strong>Seats:</strong> <?= htmlspecialchars($car['seats']) ?> &bull; 
                 <strong>Trans:</strong> <?= strtoupper(htmlspecialchars($car['transmission'])) ?>

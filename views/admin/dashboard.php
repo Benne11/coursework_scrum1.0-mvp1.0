@@ -37,11 +37,11 @@
             padding: 20px;
             background-color: #1a252f;
             text-align: center;
-            border-bottom: 2px solid #ffc107;
+            border-bottom: 2px solid #f48f0c;
         }
 
         .sidebar-header h2 {
-            color: #ffc107;
+            color: #f48f0c;
             font-size: 22px;
             margin-bottom: 5px;
         }
@@ -69,7 +69,7 @@
         .sidebar-nav a:hover, .sidebar-nav a.active {
             background-color: #34495e;
             color: #fff;
-            border-left-color: #ffc107;
+            border-left-color: #f48f0c;
         }
 
         .sidebar-nav a i {
