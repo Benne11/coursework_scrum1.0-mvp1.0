@@ -334,4 +334,16 @@ function cancelBooking(PDO $db, int $booking_id, int $user_id) {
         return false;
     }
 }
-
+function getListTimeCarBooking(PDO $db, int $car_id): array {
+    try {
+        $sql = "SELECT pickup_datetime, dropoff_datetime FROM bookings 
+                WHERE car_id = :car_id AND status IN ('confirmed', 'pending')"
+                . " AND dropoff_datetime > NOW()"; // Chỉ lấy những booking chưa hoàn thành để tránh trùng lịch với các booking đã qua
+        $stmt = $db->prepare($sql);
+        $stmt->execute([':car_id' => $car_id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("getListTimeCarBooking Error: " . $e->getMessage());
+        return [];
+    }
+}

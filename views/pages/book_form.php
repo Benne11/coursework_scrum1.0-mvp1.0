@@ -7,6 +7,23 @@ if (isset($_SESSION['error_message'])) {
     $errorMessage = $_SESSION['error_message'];
     unset($_SESSION['error_message']);
 }
+$stmt = $db->prepare("
+    SELECT pickup_datetime, dropoff_datetime 
+    FROM bookings 
+    WHERE car_id = :car_id 
+    AND status IN ('confirmed', 'pending') 
+    AND dropoff_datetime >= NOW()
+");
+$stmt->execute([':car_id' => $car['id']]);
+$bookedRanges = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$blockedDates=[];
+foreach($bookedRanges as $bookingRange){
+    $blockedDates[]= [
+        'from' => $bookingRange['pickup_datetime'],
+        'to' => $bookingRange['dropoff_datetime']
+    ];
+}
+$blockedDatesJson = json_encode($blockedDates);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -15,6 +32,8 @@ if (isset($_SESSION['error_message'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book <?= htmlspecialchars($car['model_name']) ?> | Born Car</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src ="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <style>
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
@@ -161,6 +180,13 @@ if (isset($_SESSION['error_message'])) {
             font-size: 15px; 
             color: #555;
         }
+        /* Tắt viền của ngày hiện tại (Today) để tránh nhầm lẫn */
+        .flatpickr-day.today {
+            border-color: transparent !important;
+        }
+        .flatpickr-day.today:hover {
+            background: #e6e6e6; /* Vẫn giữ hiệu ứng hover nhẹ */
+        }
     </style>
 </head>
 <body>
@@ -214,15 +240,16 @@ if (isset($_SESSION['error_message'])) {
             <form method="POST" action="index.php?action=book_preview">
                 <input type="hidden" name="car_id" value="<?= htmlspecialchars($car['id']) ?>">
                 
-                <div class="form-group">
-                    <label for="pickup_datetime">Pick-up Date & Time</label>
-                    <input type="datetime-local" id="pickup_datetime" name="pickup_datetime" class="form-control" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="dropoff_datetime">Drop-off Date & Time</label>
-                    <input type="datetime-local" id="dropoff_datetime" name="dropoff_datetime" class="form-control" required>
-                </div>
+        <div class="form-group">
+            <label for="pickup_datetime">Pick-up Date & Time</label>
+            <!-- Đổi type="datetime-local" thành text để thư viện hiển thị đẹp hơn -->
+            <input type="text" id="pickup_datetime" name="pickup_datetime" class="form-control" placeholder="Select pick-up time" required>
+        </div>
+
+        <div class="form-group">
+            <label for="dropoff_datetime">Drop-off Date & Time</label>
+            <input type="text" id="dropoff_datetime" name="dropoff_datetime" class="form-control" placeholder="Select drop-off time" required>
+        </div>
                 
                 <div class="form-group">
                     <label for="service_type">Service Type</label>
@@ -237,6 +264,62 @@ if (isset($_SESSION['error_message'])) {
         </div>
     </div>
 </div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // 1. Lấy dữ liệu
+    const blockedDates = <?php echo $blockedDatesJson; ?>;
+    const now = new Date(); // Lấy thời gian hiện tại để làm mặc định
+
+    // 2. Cấu hình
+    const commonConfig = {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        time_24hr: true,
+        minDate: "today",       
+        disable: blockedDates,  
+        
+        // CẤU HÌNH MỚI: Giờ mặc định là giờ hiện tại (thay vì 12:00)
+        defaultHour: now.getHours(),
+        defaultMinute: now.getMinutes(),
+        
+        // Logic chặn giờ quá khứ
+        onOpen: function(selectedDates, dateStr, instance) {
+            updateMinTime(instance);
+        },
+        onChange: function(selectedDates, dateStr, instance) {
+            updateMinTime(instance);
+            if (instance.element.id === 'pickup_datetime') {
+                dropoffPicker.set("minDate", dateStr);
+            }
+        }
+    };
+
+    // Hàm cập nhật minTime (giữ nguyên logic cũ của bạn)
+    function updateMinTime(instance) {
+        if (!instance.selectedDates.length) return;
+
+        const selectedDate = instance.selectedDates[0];
+        const currentNow = new Date(); // Lấy lại giờ mỗi khi gọi hàm để chính xác nhất
+
+        const isToday = selectedDate.getDate() === currentNow.getDate() &&
+                        selectedDate.getMonth() === currentNow.getMonth() &&
+                        selectedDate.getFullYear() === currentNow.getFullYear();
+
+        if (isToday) {
+            currentNow.setMinutes(currentNow.getMinutes() + 30); 
+            const hour = currentNow.getHours().toString().padStart(2, '0');
+            const minute = currentNow.getMinutes().toString().padStart(2, '0');
+            instance.set('minTime', `${hour}:${minute}`);
+        } else {
+            instance.set('minTime', null);
+        }
+    }
+
+    // 3. Khởi tạo
+    const pickupPicker = flatpickr("#pickup_datetime", commonConfig);
+    const dropoffPicker = flatpickr("#dropoff_datetime", commonConfig);
+});
+</script>
 
 <?php include __DIR__ . '/../layouts/footer.php'; ?>
 
