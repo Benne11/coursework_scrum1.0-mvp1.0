@@ -345,8 +345,8 @@
                         </div>
                         
                         <div class="pricing-box">
-                            <div class="car-price">$<?= number_format($car['price_per_day'], 0) ?> <span class="car-price-sub">/ Day</span></div>
-                            <div class="car-price-sub">$<?= number_format($car['price_per_hour'], 0) ?> / Hour</div>
+                            <div class="car-price"><?= number_format($car['price_per_day'], 0) ?> ₫<span class="car-price-sub">/ Day</span></div>
+                            <div class="car-price-sub"><?= number_format($car['price_per_hour'], 0) ?> ₫/ Hour</div>
                         </div>
                         
                         <div class="card-actions">

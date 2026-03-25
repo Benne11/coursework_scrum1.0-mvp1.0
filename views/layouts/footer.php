@@ -113,9 +113,9 @@
         <div class="footer-col">
             <h4>Connect & Support</h4>
             <ul>
-                <li><a href="#">📘 Facebook</a></li>
-                <li><a href="#">💼 LinkedIn</a></li>
-                <li><a href="#">🎵 TikTok</a></li>
+                <li><a href="https://www.facebook.com/GreenwichVietnam">📘 Facebook</a></li>
+                <li><a href="#">💼 https://greenwich.edu.vn/</a></li>
+                <li><a href="https://www.tiktok.com/@uniofgreenwich">🎵 TikTok</a></li>
                 <li><a href="#">📸 Instagram</a></li>
             </ul>
             <div style="margin-top: 30px;">
