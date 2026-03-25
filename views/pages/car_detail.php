@@ -307,7 +307,7 @@
     <div class="detail-wrapper">
         <!-- Left Column: Image -->
         <div class="car-image-col">
-            <img 
+            <img
                 src="<?= !empty($car['image_url']) ? htmlspecialchars($car['image_url']) : 'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=1200&q=80' ?>" 
                 alt="<?= htmlspecialchars($car['model_name']) ?>"
                 onerror="this.src='https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=1200&q=80'"
@@ -327,7 +327,7 @@
                     <div class="service-item">
                         <div class="service-icon"><i class="fas fa-user-tie"></i></div>
                         <div class="service-text">
-                            <h4>Chauffeur-Driven Service</h4>
+                            <h4>Private driver - Driven Service</h4>
                             <p>Professional, polite drivers committed to your comfort and safety every mile.</p>
                         </div>
                     </div>

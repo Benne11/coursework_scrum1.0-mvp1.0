@@ -11,27 +11,204 @@ $action = $_GET['action'] ?? 'home';
 // Định tuyến cơ bản
 switch ($action) {
     case 'home':
-        echo "<div style='min-height: 60vh; padding: 40px; font-family: sans-serif; text-align: center;'>";
-        echo "<h1 style='color: #1a1a1a; margin-bottom: 20px;'>Home - Born Car</h1>";
-        echo "<p style='margin-bottom: 30px;'><a href='index.php?action=browse_cars' style='padding: 15px 30px; background: #ffc107; color: #1a1a1a; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 18px;'>=> Browse Cars Now! <=</a></p>";
-        if (isset($_SESSION['user'])) {
-            $fullname = htmlspecialchars($_SESSION['user']['fullname']);
-            $role = htmlspecialchars($_SESSION['user']['role']);
-            $tier = htmlspecialchars($_SESSION['user']['membership_tier'] ?? 'new');
-            //$adminLink = ($role === 'admin') ? "<a href='index.php?action=admin_dashboard' style='color: #ffc107; font-weight: bold; text-decoration: none; margin-right: 15px;'>Admin Panel</a>" : "";
-            
-            echo "<p style='font-size: 18px;'>Welcome, <strong>{$fullname}</strong>! (Role: {$role} | Tier: <span style='color: #ffc107; font-weight: bold;'>{$tier}</span>)</p>";
-            echo "<p>
-                    
-                    
-                    <a href='index.php?action=logout' style='color: #dc3545; font-weight: bold; text-decoration: none;'>Logout</a>
-                  </p>";
-        } else {
-            echo "<p style='font-size: 18px;'><a href='index.php?action=login_form' style='color: #007bff; text-decoration: none; font-weight: bold;'>Login</a> | <a href='index.php?action=register_form' style='color: #28a745; text-decoration: none; font-weight: bold;'>Register</a></p>";
-        }
-        echo "</div>";
-        // Nhúng Footer cho trang Home
-        require_once 'views/layouts/footer.php';
+        ?>
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Home - Born Car</title>
+            <style>
+                body { 
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+                    background-color: #f8f9fa; 
+                    margin: 0; 
+                    padding: 0; 
+                    color: #333;
+                }
+                
+                /* Navbar Styling */
+                .navbar { 
+                    background-color: #1a1a1a; 
+                    color: #fff; 
+                    padding: 15px 40px; 
+                    display: flex; 
+                    justify-content: space-between; 
+                    align-items: center; 
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+                }
+                .navbar .logo strong { font-size: 24px; letter-spacing: 1px; color: #f48f0c;}
+                .navbar a { 
+                    color: #fff; 
+                    text-decoration: none; 
+                    margin-left: 20px; 
+                    font-weight: 500;
+                    transition: color 0.3s;
+                }
+                .navbar a:hover { color: #f48f0c; }
+                
+                /* User Context Fix */
+                .nav-links {
+                    display: flex;
+                    align-items: center;
+                }
+                .user-greeting {
+                    color: white;
+                    margin-left: 20px;
+                    font-weight: 500;
+                }
+                
+                /* Home Content */
+                .home-content {
+                    min-height: auto;
+                    padding: 0;
+                    text-align: center;
+                    display: none;
+                }
+                .home-title {
+                    color: #1a1a1a;
+                    margin-bottom: 20px;
+                    font-size: 42px;
+                    font-weight: 700;
+                }
+                .home-content p {
+                    margin-bottom: 30px;
+                    font-size: 18px;
+                }
+                .btn-primary {
+                    display: inline-block;
+                    padding: 15px 30px;
+                    background: #f48f0c;
+                    color: #1a1a1a;
+                    text-decoration: none;
+                    border-radius: 8px;
+                    font-weight: bold;
+                    font-size: 18px;
+                    transition: background 0.3s;
+                }
+                .btn-primary:hover {
+                    background: #1a1a1a;
+                    color: #f48f0c;
+                }
+                .welcome-message {
+                    background: #fff;
+                    padding: 20px;
+                    border-radius: 8px;
+                    margin-bottom: 30px;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                    max-width: 600px;
+                    margin-left: auto;
+                    margin-right: auto;
+                    margin-top: 20px;
+                }
+                
+                /* Banner Advertisement */
+                .banner-ad {
+                    width: 100%;
+                    height: 350px;
+                    background: linear-gradient(135deg, rgba(30, 30, 30, 0.7) 0%, rgba(100, 50, 150, 0.7) 100%), 
+                                url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80');
+                    background-size: cover;
+                    background-position: center;
+                    border-radius: 12px;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    color: white;
+                    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+                    margin-bottom: 50px;
+                    overflow: hidden;
+                }
+                .banner-ad h2 {
+                    font-size: 48px;
+                    font-weight: 700;
+                    margin: 0 0 20px 0;
+                    text-align: center;
+                    max-width: 90%;
+                    line-height: 1.2;
+                }
+                .banner-ad p {
+                    font-size: 18px;
+                    margin: 0 0 30px 0;
+                    text-align: center;
+                    max-width: 80%;
+                    line-height: 1.5;
+                }
+                .banner-ad .btn-cta {
+                    display: inline-block;
+                    padding: 15px 40px;
+                    background: #f48f0c;
+                    color: white;
+                    text-decoration: none;
+                    border-radius: 30px;
+                    font-weight: 600;
+                    font-size: 16px;
+                    transition: all 0.3s;
+                    border: none;
+                    cursor: pointer;
+                }
+                .banner-ad .btn-cta:hover {
+                    background: #bd7211;
+                    transform: scale(1.05);
+                }
+                
+                @media (max-width: 768px) {
+                    .banner-ad {
+                        height: 250px;
+                    }
+                    .banner-ad h2 {
+                        font-size: 32px;
+                    }
+                    .banner-ad p {
+                        font-size: 15px;
+                    }
+                }
+            </style>
+        </head>
+        <body>
+            <div class="navbar">
+                <div class="logo"><strong>Born Car</strong></div>
+                <div class="nav-links">
+                    <a href="index.php?action=home" class="active">Home</a>
+                    <a href="index.php?action=browse_cars">Browse Cars</a>
+                    <?php if (isset($_SESSION['user'])): ?>
+                        <a href="index.php?action=my_bookings">My Bookings</a>
+                        <span class="user-greeting">Hi, <?= htmlspecialchars($_SESSION['user']['fullname']) ?></span>
+                        <a href="index.php?action=logout" style="color: #f48f0c;">Logout</a>
+                    <?php else: ?>
+                        <a href="index.php?action=login_form">Login/Register</a>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <!-- Advertisement Banner -->
+            <div class="banner-ad">
+                <h2>Easy Car Rental, Perfect Journey</h2>
+                <p>Over 100+ latest car models ready to accompany you on every road.</p>
+                <a href="index.php?action=browse_cars" class="btn-cta">Get Started Now</a>
+            </div>
+
+            <!-- Welcome Message -->
+            <div class="welcome-message">
+                <?php if (isset($_SESSION['user'])): 
+                    $fullname = htmlspecialchars($_SESSION['user']['fullname']);
+                    $role = htmlspecialchars($_SESSION['user']['role']);
+                    $tier = htmlspecialchars($_SESSION['user']['membership_tier'] ?? 'new');
+                ?>
+                    <p style="margin: 0;">Welcome, <strong><?= $fullname ?></strong>! (Role: <?= $role ?> | Tier: <span style="color: #f48f0c; font-weight: bold;"><?= $tier ?></span>)</p>
+                <?php else: ?>
+                    <p style="margin: 0;">Welcome to Born Car! Please <a href="index.php?action=login_form" style="color: #f48f0c; font-weight: bold;">login or register</a> to start your car rental journey.</p>
+                <?php endif; ?>
+            </div>
+
+            <div class="home-content">
+            </div>
+
+            <?php require_once 'views/layouts/footer.php'; ?>
+        </body>
+        </html>
+        <?php
         break;
 
     case 'browse_cars':
