@@ -5,80 +5,16 @@
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Cars - Admin Panel</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+    <link rel="stylesheet" href="css/style.css">
 
-        body {
-            display: flex;
-            min-height: 100vh;
-            background-color: #f4f6f9;
-            color: #333;
-        }
-
-        /* Sidebar Styles (Reused from Dashboard) */
-        .sidebar { width: 250px; background-color: #2c3e50; color: #fff; display: flex; flex-direction: column; flex-shrink: 0; }
-        .sidebar-header { padding: 20px; background-color: #1a252f; text-align: center; border-bottom: 2px solid #f48f0c; }
-        .sidebar-header h2 { color: #f48f0c; font-size: 22px; margin-bottom: 5px; }
-        .sidebar-header span { font-size: 12px; color: #bdc3c7; }
-        .sidebar-nav { flex-grow: 1; padding: 20px 0; }
-        .sidebar-nav a { display: flex; align-items: center; padding: 15px 25px; color: #bdc3c7; text-decoration: none; transition: 0.3s; border-left: 4px solid transparent; }
-        .sidebar-nav a:hover, .sidebar-nav a.active { background-color: #34495e; color: #fff; border-left-color: #f48f0c; }
-        .sidebar-nav a i { margin-right: 15px; width: 20px; text-align: center; }
-        .sidebar-footer { padding: 20px; }
-        .btn-back { display: block; width: 100%; padding: 10px; background-color: #e74c3c; color: #fff; text-align: center; text-decoration: none; border-radius: 5px; font-weight: bold; transition: 0.3s; }
-        .btn-back:hover { background-color: #c0392b; }
-
-        /* Main Content */
-        .main-content { flex-grow: 1; display: flex; flex-direction: column; overflow-x: hidden; }
-        .top-navbar { background: #fff; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .top-navbar h1 { font-size: 24px; color: #2c3e50; }
-        .admin-profile { display: flex; align-items: center; gap: 15px; }
-        .admin-profile span { font-weight: bold; color: #2c3e50; }
-        .content-body { padding: 30px; overflow-y: auto; }
-
-        /* Cars List Specific Styles */
-        .page-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .btn-add { background-color: #2ecc71; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block; transition: 0.3s; }
-        .btn-add:hover { background-color: #27ae60; }
-        
-        .messages { margin-bottom: 20px; }
-        .success-msg { background-color: #d4edda; color: #155724; padding: 15px; border-radius: 5px; margin-bottom: 15px; }
-        .error-msg { background-color: #f8d7da; color: #721c24; padding: 15px; border-radius: 5px; margin-bottom: 15px; }
-
-        .table-container { background: #fff; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow: hidden; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
-        th { background-color: #1a252f; color: #fff; font-weight: 500; text-transform: uppercase; font-size: 14px; }
-        tr:hover { background-color: #f8f9fa; }
-        
-        .car-img { width: 50px; height: 50px; object-fit: cover; border-radius: 5px; background: #eee; }
-        .status-badge { padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; }
-        .status-badge.available { background-color: #e5f9e7; color: #2ecc71; }
-        .status-badge.unavailable { background-color: #fbeaea; color: #e74c3c; }
-
-        .action-btns { display: flex; gap: 10px; }
-        .btn-edit { background-color: #f1c40f; color: #fff; padding: 6px 12px; text-decoration: none; border-radius: 4px; font-size: 14px; transition: 0.2s; }
-        .btn-edit:hover { background-color: #f39c12; }
-        .btn-delete { background-color: #e74c3c; color: #fff; padding: 6px 12px; border: none; border-radius: 4px; font-size: 14px; cursor: pointer; transition: 0.2s; }
-        .btn-delete:hover { background-color: #c0392b; }
-
-        @media (max-width: 768px) {
-            body { flex-direction: column; }
-            .sidebar { width: 100%; height: auto; }
-            .table-container { overflow-x: auto; }
-        }
-    </style>
 </head>
+
 <body>
 
     <!-- Sidebar -->
@@ -87,7 +23,7 @@
             <h2><i class="fas fa-car-side"></i> Bon Bon Admin</h2>
             <span>Management Panel</span>
         </div>
-        
+
         <div class="sidebar-nav">
             <a href="index.php?action=admin_dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard Overview</a>
             <a href="index.php?action=admin_cars" class="active"><i class="fas fa-car"></i> Manage Cars</a>
@@ -96,7 +32,7 @@
         </div>
 
         <div class="sidebar-footer">
-            <a href="index.php?action=home" class="btn-back"><i class="fas fa-store"></i> Back to Store</a>
+            <a href="index.php?action=home" class="btn-back" onclick="if (window.history.length > 1) { event.preventDefault(); window.history.back(); }">&larr; Back</a>
         </div>
     </div>
 
@@ -110,7 +46,7 @@
         </div>
 
         <div class="content-body">
-            
+
             <div class="messages">
                 <?php if (isset($_SESSION['success_message'])): ?>
                     <div class="success-msg"><?= htmlspecialchars($_SESSION['success_message'] ?? '') ?></div>
@@ -151,8 +87,8 @@
                                 <tr>
                                     <td>#<?= htmlspecialchars($car['id'] ?? '') ?></td>
                                     <td>
-                                        <img src="<?= !empty($car['image_url']) ? htmlspecialchars($car['image_url'] ?? '') : 'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=50&q=80' ?>" 
-                                             alt="Car Image" class="car-img">
+                                        <img src="<?= !empty($car['image_url']) ? htmlspecialchars($car['image_url'] ?? '') : 'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=50&q=80' ?>"
+                                            alt="Car Image" class="car-img">
                                     </td>
                                     <td><strong><?= htmlspecialchars($car['model_name'] ?? '') ?></strong></td>
                                     <td><?= htmlspecialchars(ucfirst($car['category'] ?? '')) ?></td>
@@ -163,11 +99,11 @@
                                             $now = time();
                                             $from = strtotime($car['booked_from']);
                                             $until = strtotime($car['booked_until']);
-                                            
+
                                             // Nếu ngày hiện tại nằm trong khoảng thuê -> Đang đi khách
                                             if ($now >= $from && $now <= $until) {
                                                 echo '<span style="background:#ff9800; color:#fff; padding:5px 10px; border-radius:15px; font-size:0.85em; display:inline-block; line-height:1.4;">On Trip<br><small>' . date('d/m H:i', $from) . ' - ' . date('d/m H:i', $until) . '</small></span>';
-                                            } 
+                                            }
                                             // Nếu ngày hiện tại nhỏ hơn ngày thuê -> Đã được đặt trước
                                             else {
                                                 echo '<span style="background:#03a9f4; color:#fff; padding:5px 10px; border-radius:15px; font-size:0.85em; display:inline-block; line-height:1.4;">Booked<br><small>' . date('d/m H:i', $from) . ' - ' . date('d/m H:i', $until) . '</small></span>';
@@ -184,7 +120,7 @@
                                     </td>
                                     <td class="action-btns">
                                         <a href="index.php?action=admin_edit_car&id=<?= htmlspecialchars($car['id'] ?? 0) ?>" class="btn-edit" style="background:#f48f0c; color:#000; padding:5px 10px; text-decoration:none; border-radius:5px;"><i class="fas fa-edit"></i> Edit</a>
-                                        
+
                                         <form method="POST" action="index.php?action=admin_delete_car" style="display:inline-block;" onsubmit="return confirm('Are you sure you want to delete this car?');">
                                             <input type="hidden" name="car_id" value="<?= htmlspecialchars($car['id'] ?? '') ?>">
                                             <button type="submit" class="btn-delete"><i class="fas fa-trash-alt"></i> Delete</button>
@@ -201,4 +137,5 @@
     </div>
 
 </body>
+
 </html>

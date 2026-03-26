@@ -15,10 +15,10 @@ if (!isset($_SESSION['user'])) {
 if ($action === 'my_bookings' && $_SERVER['REQUEST_METHOD'] === 'GET') {
     $user_id = $_SESSION['user']['id'];
     $db = getConnection();
-    
+
     // Get user's bookings
     $bookings = getUserBookings($db, $user_id);
-    
+
     // Include view
     require_once __DIR__ . '/../views/pages/my_bookings.php';
     exit;
@@ -27,15 +27,15 @@ if ($action === 'my_bookings' && $_SERVER['REQUEST_METHOD'] === 'GET') {
 if ($action === 'cancel_booking' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $user_id = $_SESSION['user']['id'];
     $booking_id = isset($_POST['booking_id']) ? (int)$_POST['booking_id'] : 0;
-    
+
     if ($booking_id > 0) {
         $db = getConnection();
-        
+
         // Log để debug (có thể xóa sau)
         error_log("Attempting to cancel booking #$booking_id for user #$user_id");
 
         $success = cancelBooking($db, $booking_id, $user_id);
-        
+
         if ($success) {
             $_SESSION['success_message'] = "Your booking #$booking_id has been cancelled.";
         } else {
@@ -53,26 +53,34 @@ if ($action === 'cancel_booking' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $_SESSION['error_message'] = "Invalid request.";
     }
-    
+
     header("Location: index.php?action=my_bookings");
     exit;
 }
 if ($action === 'edit_booking' && $_SERVER['REQUEST_METHOD'] === 'GET') {
     $user_id = $_SESSION['user']['id'];
     $booking_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-    
+
     if ($booking_id > 0) {
         $db = getConnection();
         // Nhận luôn mảng Booking (hoặc false) thay vì mảng bọc logic
         $booking = getUserBookingsById($db, $booking_id, $user_id);
-        
+
         // Nếu $booking là false hoặc null
         if (!$booking) {
             $_SESSION['error_message'] = "Booking not found or you don't have permission to edit it.";
             header("Location: index.php?action=my_bookings");
             exit;
         }
-        
+
+        // Get Car Details for Edit Form Price Calculation
+        require_once __DIR__ . '/../datafunctions/car_functions.php';
+        $carResult = getCarById($db, $booking['car_id']);
+        $car = $carResult['success'] ? $carResult['data'] : null;
+
+        // Get booked slots to exclude (but exclude current booking so we can re-select same dates)
+        $bookedSlots = getBookedSlots($db, $booking['car_id'], $booking_id);
+
         // Fix tên file: Cần trỏ đúng trang user_edit_booking.php mà bạn vừa tạo
         require_once __DIR__ . '/../views/pages/user_edit_booking.php';
         exit;
@@ -89,7 +97,7 @@ if ($action === 'update_booking' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($booking_id > 0) {
         $db = getConnection();
         require_once __DIR__ . '/../datafunctions/car_functions.php';
-        
+
         $booking = getUserBookingsById($db, $booking_id, $user_id);
         if ($booking) {
             $pickup_datetime = $_POST['pickup_datetime'];
@@ -101,7 +109,7 @@ if ($action === 'update_booking' && $_SERVER['REQUEST_METHOD'] === 'POST') {
                 $car = $carResult['data'];
                 $priceData = calculateBookingPrice($car, $pickup_datetime, $dropoff_datetime, $service_type);
                 $new_total_price = $priceData['subtotal'];
-                
+
                 $success = updateUserBooking(
                     $db,
                     $pickup_datetime,

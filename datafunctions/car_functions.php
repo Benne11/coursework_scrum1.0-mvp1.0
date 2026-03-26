@@ -11,13 +11,14 @@ require_once __DIR__ . '/../config/database.php';
  * @param array $filters Các bộ lọc (nếu có)
  * @return array Trả về mảng chứa kết quả success và danh sách dataset
  */
-function getAllCars(PDO $db, array $filters = []): array {
+function getAllCars(PDO $db, array $filters = []): array
+{
     try {
         // SQL cơ bản lấy những xe rảnh
         $sql = "SELECT id, model_name, category, seats, fuel_type, transmission, price_per_day, price_per_hour, image_url 
                 FROM cars 
                 WHERE is_available = 1";
-        
+
         $params = [];
 
         // Xử lý bộ lọc (Filter & Search) một cách linh hoạt bằng mảng và bind PDO
@@ -36,12 +37,17 @@ function getAllCars(PDO $db, array $filters = []): array {
             $params[':transmission'] = $filters['transmission'];
         }
 
+        if (!empty($filters['district']) && $filters['district'] !== 'all') {
+            $sql .= " AND district = :district";
+            $params[':district'] = $filters['district'];
+        }
+
         // Thêm sắp xếp mặc định
         $sql .= " ORDER BY created_at DESC";
-                
+
         $stmt = $db->prepare($sql);
         $stmt->execute($params);
-        
+
         $cars = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return [
@@ -60,21 +66,183 @@ function getAllCars(PDO $db, array $filters = []): array {
 }
 
 /**
+ * Lấy danh sách quận/huyện nổi bật dựa trên xe còn sẵn.
+ * Trả về tên district, số lượng xe và ảnh đại diện cho district.
+ *
+ * @param PDO $db
+ * @param int $limit
+ * @return array
+ */
+function getFeaturedDistricts(PDO $db, int $limit = 8): array
+{
+    try {
+        $sql = "SELECT c1.district,
+                                             COUNT(*) AS car_count,
+                                             COALESCE(
+                                                 (
+                                                     SELECT c2.image_url
+                                                     FROM cars c2
+                                                     WHERE c2.is_available = 1
+                                                         AND c2.district = c1.district
+                                                         AND c2.image_url IS NOT NULL
+                                                         AND c2.image_url != ''
+                                                     ORDER BY RAND()
+                                                     LIMIT 1
+                                                 ),
+                                                 ''
+                                             ) AS image_url
+                                FROM cars c1
+                                WHERE c1.is_available = 1
+                                    AND c1.district IS NOT NULL
+                                    AND c1.district != ''
+                                GROUP BY c1.district
+                                ORDER BY car_count DESC, c1.district ASC
+                                LIMIT :limit";
+
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return [
+            'success' => true,
+            'data' => $stmt->fetchAll(PDO::FETCH_ASSOC),
+            'message' => 'Featured districts retrieved successfully.'
+        ];
+    } catch (PDOException $e) {
+        error_log("getFeaturedDistricts Error: " . $e->getMessage());
+        return [
+            'success' => false,
+            'data' => [],
+            'message' => 'System error while retrieving featured districts.'
+        ];
+    }
+}
+
+/**
+ * Lấy ngẫu nhiên 6 xe có sẵn để hiển thị section "Xe có ngay".
+ * SQL pattern theo yêu cầu: ORDER BY RAND() LIMIT 6
+ *
+ * @param PDO $db
+ * @param int $limit
+ * @return array
+ */
+function getRandomAvailableCars(PDO $db, int $limit = 6): array
+{
+    try {
+        $sql = "SELECT id, model_name, category, seats, fuel_type, transmission, price_per_day, price_per_hour, image_url
+                FROM cars
+                WHERE is_available = 1
+                ORDER BY RAND()
+                LIMIT :limit";
+
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return [
+            'success' => true,
+            'data' => $stmt->fetchAll(PDO::FETCH_ASSOC),
+            'message' => 'Random available cars retrieved successfully.'
+        ];
+    } catch (PDOException $e) {
+        error_log("getRandomAvailableCars Error: " . $e->getMessage());
+        return [
+            'success' => false,
+            'data' => [],
+            'message' => 'System error while retrieving random available cars.'
+        ];
+    }
+}
+
+/**
+ * Lấy ngẫu nhiên xe phù hợp gia đình nhỏ (tối đa 5 chỗ) và còn sẵn.
+ *
+ * @param PDO $db
+ * @param int $limit
+ * @return array
+ */
+function getRandomSmallFamilyCars(PDO $db, int $limit = 6): array
+{
+    try {
+        $sql = "SELECT id, model_name, category, seats, fuel_type, transmission, price_per_day, price_per_hour, image_url
+                FROM cars
+                WHERE is_available = 1
+                  AND seats <= 5
+                ORDER BY RAND()
+                LIMIT :limit";
+
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return [
+            'success' => true,
+            'data' => $stmt->fetchAll(PDO::FETCH_ASSOC),
+            'message' => 'Small family cars retrieved successfully.'
+        ];
+    } catch (PDOException $e) {
+        error_log("getRandomSmallFamilyCars Error: " . $e->getMessage());
+        return [
+            'success' => false,
+            'data' => [],
+            'message' => 'System error while retrieving small family cars.'
+        ];
+    }
+}
+
+/**
+ * Lấy ngẫu nhiên xe premium: còn sẵn và giá thuê theo ngày trên 1 triệu.
+ *
+ * @param PDO $db
+ * @param int $limit
+ * @return array
+ */
+function getRandomPremiumCars(PDO $db, int $limit = 6): array
+{
+    try {
+        $sql = "SELECT id, model_name, category, seats, fuel_type, transmission, price_per_day, price_per_hour, image_url
+                FROM cars
+                WHERE is_available = 1
+                  AND price_per_day > 1000000
+                ORDER BY RAND()
+                LIMIT :limit";
+
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return [
+            'success' => true,
+            'data' => $stmt->fetchAll(PDO::FETCH_ASSOC),
+            'message' => 'Premium cars retrieved successfully.'
+        ];
+    } catch (PDOException $e) {
+        error_log("getRandomPremiumCars Error: " . $e->getMessage());
+        return [
+            'success' => false,
+            'data' => [],
+            'message' => 'System error while retrieving premium cars.'
+        ];
+    }
+}
+
+/**
  * Lấy chi tiết một xe dựa trên ID.
  * 
  * @param PDO $db Đối tượng PDO
  * @param int $car_id ID của xe
  * @return array Trả về mảng chứa kết quả success và dữ liệu chi tiết xe
  */
-function getCarById(PDO $db, int $car_id): array {
+function getCarById(PDO $db, int $car_id): array
+{
     try {
         $sql = "SELECT id, model_name, category, seats, fuel_type, transmission, price_per_day, price_per_hour, image_url, description, is_available 
                 FROM cars 
                 WHERE id = :id";
-                
+
         $stmt = $db->prepare($sql);
         $stmt->execute([':id' => $car_id]);
-        
+
         $car = $stmt->fetch();
 
         if ($car) {
@@ -104,7 +272,8 @@ function getCarById(PDO $db, int $car_id): array {
  * Lấy danh sách xe kèm trạng thái đặt xe cho Admin
  * (Chứa Subquery tìm ngày trả xe gần nhất nếu có)
  */
-function getAdminCarsWithStatus(PDO $db): array {
+function getAdminCarsWithStatus(PDO $db): array
+{
     try {
         $sql = "SELECT c.*, 
                 (SELECT pickup_datetime FROM bookings b WHERE b.car_id = c.id AND b.status IN ('pending', 'confirmed') AND b.dropoff_datetime >= NOW() ORDER BY b.pickup_datetime ASC LIMIT 1) as booked_from,
@@ -121,7 +290,8 @@ function getAdminCarsWithStatus(PDO $db): array {
 /**
  * Thêm xe mới vào CSDL
  */
-function createCar(PDO $db, array $data): bool {
+function createCar(PDO $db, array $data): bool
+{
     try {
         $sql = "INSERT INTO cars (model_name, category, seats, transmission, fuel_type, price_per_day, price_per_hour, image_url, description) 
                 VALUES (:model_name, :category, :seats, :transmission, :fuel_type, :price_per_day, :price_per_hour, :image_url, :description)";
@@ -146,7 +316,8 @@ function createCar(PDO $db, array $data): bool {
 /**
  * Cập nhật thông tin xe
  */
-function updateCar(PDO $db, int $car_id, array $data): bool {
+function updateCar(PDO $db, int $car_id, array $data): bool
+{
     try {
         $sql = "UPDATE cars SET 
                     model_name = :model_name, 

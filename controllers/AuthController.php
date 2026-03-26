@@ -23,14 +23,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'register_submit') {
     $fullname = trim($_POST['fullname'] ?? '');
     $email    = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
-    $phone    = trim($_POST['phone'] ?? ''); 
+    $phone    = trim($_POST['phone'] ?? '');
 
     // Validation cơ bản để bắt lỗi input rỗng
     $errors = [];
     if (empty($fullname)) $errors[] = "Full Name is required.";
     if (empty($email)) $errors[] = "Email is required.";
     if (empty($password)) $errors[] = "Password is required.";
-    
+
     // Nếu có lỗi validation input
     if (!empty($errors)) {
         $_SESSION['register_errors'] = $errors;
@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'register_submit') {
     if ($fullname && $email && $password) {
         // 1. Tạo OTP 6 số ngẫu nhiên
         $otp = sprintf("%06d", mt_rand(1, 999999));
-        
+
         // 2. Lưu user vào DB (is_verified = 0)
         $db = getConnection();
         // registerUser returns array ['success' => bool, 'message' => string]
@@ -59,8 +59,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'register_submit') {
                 $mail->isSMTP();
                 $mail->Host       = 'smtp.gmail.com';
                 $mail->SMTPAuth   = true;
-                $mail->Username   = 'tan0979876976@gmail.com'; 
-                $mail->Password   = 'cuigwyrdskymibyy'; 
+                $mail->Username   = 'tan0979876976@gmail.com';
+                $mail->Password   = 'cuigwyrdskymibyy';
                 $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
                 $mail->Port       = 587;
                 $mail->CharSet    = 'UTF-8';
@@ -82,10 +82,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'register_submit') {
 
                 $mail->send();
                 $_SESSION['success_message'] = "Vui lòng kiểm tra Email để lấy mã OTP!";
-                
+
                 // Mail gửi thành công -> Xóa mock OTP nếu có
                 unset($_SESSION['mock_email_otp']);
-
             } catch (Exception $e) {
                 // Nếu cấu hình email sai, fallback hiện OTP ra màn hình
                 $_SESSION['mock_email_otp'] = "LỖI MAIL: " . $mail->ErrorInfo . " - MÃ TEST LÀ: $otp";
@@ -101,18 +100,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'register_submit') {
             header("Location: index.php?action=register_form");
             exit;
         }
-    } 
+    }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'GET' && $action === 'verify_otp') {
     // Hiển thị form nhập OTP
     $email = $_GET['email'] ?? '';
     require_once __DIR__ . '/../views/pages/verify_otp.php'; // Lưu ý tôi dùng pages để đồng bộ
     exit;
-
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'verify_otp_submit') {
     // Xử lý xác thực OTP
     $email = $_POST['email'] ?? '';
     $otp_input = $_POST['otp'] ?? '';
-    
+
     if (empty($email) || empty($otp_input)) {
         $_SESSION['otp_error'] = "Please enter the OTP sent to your email.";
         header("Location: index.php?action=verify_otp&email=" . urlencode($email));
@@ -122,7 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'register_submit') {
     try {
         $db = getConnection();
         $isVerified = verifyOTP($db, $email, $otp_input);
-        
+
         if ($isVerified) {
             $_SESSION['login_success'] = "Account verified successfully! You can login now.";
             // Xóa session mock otp
@@ -139,8 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'register_submit') {
         header("Location: index.php?action=verify_otp&email=" . urlencode($email));
         exit;
     }
-
-} elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'login_submit') {
+} elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && ($action === 'login_submit' || $action === 'login')) {
     $email = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
     $remember = isset($_POST['remember']);
@@ -158,7 +155,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'register_submit') {
         if ($result['success']) {
             // Lưu thông tin user vào Session
             $_SESSION['user'] = $result['user'];
-            
+
             // Xử lý Remember Me (Lưu cookie 30 ngày)
             if ($remember) {
                 setcookie('remember_email', $email, time() + (30 * 24 * 60 * 60), "/");
@@ -169,8 +166,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'register_submit') {
                 }
             }
 
-            // Chuyển hướng về trang chủ
-            header("Location: index.php?action=browse_cars");
+            $redirectAfterLogin = $_SESSION['after_login_redirect'] ?? 'index.php?action=browse_cars';
+            unset($_SESSION['after_login_redirect']);
+
+            // Chỉ cho phép redirect nội bộ để tránh open redirect
+            if (strpos($redirectAfterLogin, 'index.php?') !== 0) {
+                $redirectAfterLogin = 'index.php?action=browse_cars';
+            }
+
+            header("Location: " . $redirectAfterLogin);
             exit;
         } else {
             $_SESSION['login_error'] = $result['message'];
@@ -188,14 +192,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'register_submit') {
         session_unset();
         session_destroy();
     }
-    
+
     // Xóa Cookie "Remember Me" nếu có
     if (isset($_COOKIE['remember_email'])) {
         setcookie('remember_email', '', time() - 3600, "/");
     }
 
-    // Chuyển hướng về trang chủ hoặc đăng nhập
-    header("Location: index.php?action=login_form");
+    // Chuyển hướng về trang danh sách xe
+    header("Location: index.php?action=browse_cars");
     exit;
 }
-
