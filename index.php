@@ -11,27 +11,8 @@ $action = $_GET['action'] ?? 'home';
 // Định tuyến cơ bản
 switch ($action) {
     case 'home':
-        echo "<div style='min-height: 60vh; padding: 40px; font-family: sans-serif; text-align: center;'>";
-        echo "<h1 style='color: #1a1a1a; margin-bottom: 20px;'>Home - Born Car</h1>";
-        echo "<p style='margin-bottom: 30px;'><a href='index.php?action=browse_cars' style='padding: 15px 30px; background: #ffc107; color: #1a1a1a; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 18px;'>=> Browse Cars Now! <=</a></p>";
-        if (isset($_SESSION['user'])) {
-            $fullname = htmlspecialchars($_SESSION['user']['fullname']);
-            $role = htmlspecialchars($_SESSION['user']['role']);
-            $tier = htmlspecialchars($_SESSION['user']['membership_tier'] ?? 'new');
-            //$adminLink = ($role === 'admin') ? "<a href='index.php?action=admin_dashboard' style='color: #ffc107; font-weight: bold; text-decoration: none; margin-right: 15px;'>Admin Panel</a>" : "";
-            
-            echo "<p style='font-size: 18px;'>Welcome, <strong>{$fullname}</strong>! (Role: {$role} | Tier: <span style='color: #ffc107; font-weight: bold;'>{$tier}</span>)</p>";
-            echo "<p>
-                    
-                    
-                    <a href='index.php?action=logout' style='color: #dc3545; font-weight: bold; text-decoration: none;'>Logout</a>
-                  </p>";
-        } else {
-            echo "<p style='font-size: 18px;'><a href='index.php?action=login_form' style='color: #007bff; text-decoration: none; font-weight: bold;'>Login</a> | <a href='index.php?action=register_form' style='color: #28a745; text-decoration: none; font-weight: bold;'>Register</a></p>";
-        }
-        echo "</div>";
-        // Nhúng Footer cho trang Home
-        require_once 'views/layouts/footer.php';
+        require_once 'config/database.php';
+        require_once 'controllers/HomeController.php';
         break;
 
     case 'browse_cars':
@@ -42,6 +23,7 @@ switch ($action) {
 
     case 'book_form':
     case 'book_preview':
+    case 'update_booking':
     case 'checkout':
     case 'payment_gateway':
     case 'process_payment':
@@ -51,8 +33,8 @@ switch ($action) {
         break;
 
     case 'register_form':
-        require_once 'views/pages/register.php';
-        break;
+        header('Location: index.php?action=browse_cars&auth=register');
+        exit;
 
     case 'register_submit':
     case 'verify_otp':
@@ -63,10 +45,11 @@ switch ($action) {
         break;
 
     case 'login_form':
-        require_once 'views/pages/login.php';
-        break;
+        header('Location: index.php?action=browse_cars&auth=login');
+        exit;
 
     case 'login_submit':
+    case 'login':
     case 'logout':
         require_once 'config/database.php';
         require_once 'controllers/AuthController.php';
@@ -75,12 +58,11 @@ switch ($action) {
     case 'my_bookings':
     case 'cancel_booking':
     case 'edit_booking':    // Hiển thị Form để sửa
-    case 'update_booking':  // Nhận dữ liệu POST để lưu vào DB
         require_once 'config/database.php';
         require_once 'controllers/UserController.php';
         break;
 
-    
+
     case 'admin_dashboard':
     case 'admin_cars':
     case 'admin_delete_car':
