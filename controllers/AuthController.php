@@ -49,46 +49,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'register_submit') {
         $result = registerUser($db, $fullname, $email, $phone, $password, $otp);
 
         if ($result['success']) {
-            // 3. Khởi tạo PHPMailer gửi mail thật
-            require_once __DIR__ . '/../PHPMailer/Exception.php';
-            require_once __DIR__ . '/../PHPMailer/PHPMailer.php';
-            require_once __DIR__ . '/../PHPMailer/SMTP.php';
+            // 3. Gửi email OTP qua hàm riêng
+            $mailResult = sendVerificationEmail($email, $fullname, $otp);
 
-            $mail = new PHPMailer(true);
-            try {
-                $mail->isSMTP();
-                $mail->Host       = 'smtp.gmail.com';
-                $mail->SMTPAuth   = true;
-                $mail->Username   = 'tan0979876976@gmail.com'; 
-                $mail->Password   = 'cuigwyrdskymibyy'; 
-                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-                $mail->Port       = 587;
-                $mail->CharSet    = 'UTF-8';
-
-                // THÊM ĐOẠN NÀY ĐỂ FIX LỖI XAMPP LOCALHOST
-                $mail->SMTPOptions = array(
-                    'ssl' => array(
-                        'verify_peer' => false,
-                        'verify_peer_name' => false,
-                        'allow_self_signed' => true
-                    )
-                );
-
-                $mail->setFrom('tan0979876976@gmail.com', 'Car Booking System');
-                $mail->addAddress($email); // Gửi tới email khách đăng ký
-                $mail->isHTML(true);
-                $mail->Subject = 'Xác thực tài khoản - Car Booking';
-                $mail->Body    = "<h2>Chào $fullname,</h2><p>Mã OTP xác thực tài khoản của bạn là: <b style='color:red;font-size:24px;'>$otp</b></p>";
-
-                $mail->send();
+            if ($mailResult['success']) {
                 $_SESSION['success_message'] = "Vui lòng kiểm tra Email để lấy mã OTP!";
-                
                 // Mail gửi thành công -> Xóa mock OTP nếu có
                 unset($_SESSION['mock_email_otp']);
-
-            } catch (Exception $e) {
-                // Nếu cấu hình email sai, fallback hiện OTP ra màn hình
-                $_SESSION['mock_email_otp'] = "LỖI MAIL: " . $mail->ErrorInfo . " - MÃ TEST LÀ: $otp";
+            } else {
+                // Nếu cấu hình email sai, fallback hiện OTP ra màn hình (hoặc log lỗi)
+                $_SESSION['mock_email_otp'] = "LỖI MAIL: " . $mailResult['message'] . " - MÃ TEST LÀ: $otp";
             }
 
             // 4. BẮT BUỘC CHUYỂN HƯỚNG SANG TRANG NHẬP OTP

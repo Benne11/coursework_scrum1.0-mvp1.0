@@ -38,11 +38,9 @@ if ($action === 'cancel_booking' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         
         if ($success) {
             $_SESSION['success_message'] = "Your booking #$booking_id has been cancelled.";
-        } else {
+        } else {    
             // Kiểm tra xem booking có tồn tại không hoặc trạng thái hiện tại
-            $checkStmt = $db->prepare("SELECT status FROM bookings WHERE id = :id AND user_id = :uid");
-            $checkStmt->execute([':id' => $booking_id, ':uid' => $user_id]);
-            $currentStatus = $checkStmt->fetchColumn();
+            $currentStatus = getBookingStatus($db, $booking_id, $user_id);
 
             if (!$currentStatus) {
                 $_SESSION['error_message'] = "Booking not found.";

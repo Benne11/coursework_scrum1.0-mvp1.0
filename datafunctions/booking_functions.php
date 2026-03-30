@@ -347,3 +347,27 @@ function getListTimeCarBooking(PDO $db, int $car_id): array {
         return [];
     }
 }
+function getBookingStatus(PDO $db, int $booking_id, int $user_id) {
+    try {
+        $stmt = $db->prepare("SELECT status FROM bookings WHERE id = :id AND user_id = :uid");
+        $stmt->execute([':id' => $booking_id, ':uid' => $user_id]);
+        return $stmt->fetchColumn();
+    } catch (PDOException $e) {
+        error_log("getBookingStatus Error: " . $e->getMessage());
+        return false;
+    }
+}
+function calculateVoucherDiscount(PDO $db, string $voucher_code, float $subtotal): array {
+    $voucher_code = trim($voucher_code);
+    if (empty($voucher_code)) {
+        return ['amount' => 0, 'code' => '', 'error' => null];
+    }
+    
+    $voucher = getVoucherByCode($db, $voucher_code);
+    if ($voucher) {
+        $discount_amount = ($subtotal * $voucher['discount_percent']) / 100;
+        return ['amount' => $discount_amount, 'code' => $voucher_code, 'error' => null];
+    } else {
+        return ['amount' => 0, 'code' => '', 'error' => "Invalid or Expired Voucher Code."];
+    }
+}

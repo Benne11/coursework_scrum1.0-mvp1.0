@@ -101,18 +101,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'book_preview') {
         $priceBreakdown = calculateBookingPrice($car, $pickup_datetime, $dropoff_datetime, $service_type);
         
         // Xử lý Voucher
-        $voucher_code = trim($_POST['voucher_code'] ?? '');
-        $discount_amount = 0;
+        $voucher_code_input = $_POST['voucher_code'] ?? '';
+        $voucherResult = calculateVoucherDiscount($db, $voucher_code_input, $priceBreakdown['subtotal']);
         
-        if (!empty($voucher_code)) {
-            $voucher = getVoucherByCode($db, $voucher_code);
-            if ($voucher) {
-                // Áp dụng tính phần trăm giảm giá dựa trên Subtotal
-                $discount_amount = ($priceBreakdown['subtotal'] * $voucher['discount_percent']) / 100;
-            } else {
-                $_SESSION['error_message'] = "Invalid or Expired Voucher Code.";
-                $voucher_code = ''; // Xóa mã sai để không lưu
-            }
+        $discount_amount = $voucherResult['amount'];
+        $voucher_code = $voucherResult['code'];
+        
+        if ($voucherResult['error']) {
+             $_SESSION['error_message'] = $voucherResult['error'];
         }
         
         // Gộp kết quả Breakdown

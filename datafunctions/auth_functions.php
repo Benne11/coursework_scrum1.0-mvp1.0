@@ -150,3 +150,52 @@ function loginUser(PDO $db, string $email, string $password): array {
     }
 }
 
+/**
+ * Gửi email xác thực OTP
+ * 
+ * @param string $email
+ * @param string $fullname
+ * @param string $otp
+ * @return array ['success' => bool, 'message' => string]
+ */
+function sendVerificationEmail(string $email, string $fullname, string $otp): array {
+    // Chỉ cần require một lần, nếu đã có rồi thì bỏ qua
+    require_once __DIR__ . '/../PHPMailer/Exception.php';
+    require_once __DIR__ . '/../PHPMailer/PHPMailer.php';
+    require_once __DIR__ . '/../PHPMailer/SMTP.php';
+
+    $mail = new PHPMailer\PHPMailer\PHPMailer(true);
+    try {
+        $mail->isSMTP();
+        $mail->Host       = 'smtp.gmail.com';
+        $mail->SMTPAuth   = true;
+        $mail->Username   = 'tan0979876976@gmail.com'; 
+        $mail->Password   = 'cuigwyrdskymibyy'; 
+        $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port       = 587;
+        $mail->CharSet    = 'UTF-8';
+
+        // Fix lỗi SSL Localhost
+        $mail->SMTPOptions = array(
+            'ssl' => array(
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+                'allow_self_signed' => true
+            )
+        );
+
+        $mail->setFrom('tan0979876976@gmail.com', 'Car Booking System');
+        $mail->addAddress($email); 
+        $mail->isHTML(true);
+        $mail->Subject = 'Xác thực tài khoản - Car Booking';
+        $mail->Body    = "<h2>Chào $fullname,</h2><p>Mã OTP xác thực tài khoản của bạn là: <b style='color:red;font-size:24px;'>$otp</b></p>";
+
+        $mail->send();
+        return ['success' => true, 'message' => 'Email sent successfully'];
+    } catch (PHPMailer\PHPMailer\Exception $e) {
+        return ['success' => false, 'message' => $mail->ErrorInfo];
+    } catch (Exception $e) {
+        return ['success' => false, 'message' => $e->getMessage()];
+    }
+}
+
