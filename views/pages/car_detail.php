@@ -17,23 +17,7 @@
 </head>
 
 <body>
-
-    <div class="navbar">
-        <div class="logo"><strong>Born Car</strong></div>
-        <div class="nav-links">
-            <a href="index.php?action=home">Home</a>
-            <a href="index.php?action=browse_cars">Browse Cars</a>
-            <?php if (isset($_SESSION['user'])): ?>
-                <?php if (isset($_SESSION['user']['role']) && $_SESSION['user']['role'] === 'admin'): ?>
-                    <!--<a href="index.php?action=admin_dashboard" style="color: #ffc107;">Admin Panel</a>-->
-                <?php endif; ?>
-                <a href="index.php?action=my_bookings">My Bookings</a>
-                <a href="index.php?action=logout">Logout (<?= htmlspecialchars($_SESSION['user']['fullname']) ?>)</a>
-            <?php else: ?>
-                <a href="index.php?action=login_form">Login</a>
-            <?php endif; ?>
-        </div>
-    </div>
+    <?php require_once __DIR__ . '/../layouts/header.php'; ?>
 
     <div class="car-detail-container">
         <div class="top-actions">

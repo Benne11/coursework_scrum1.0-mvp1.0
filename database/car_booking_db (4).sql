@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 26, 2026 at 10:04 AM
+-- Generation Time: Apr 01, 2026 at 08:04 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -62,11 +62,38 @@ INSERT INTO `bookings` (`id`, `user_id`, `car_id`, `pickup_datetime`, `dropoff_d
 (22, 1, 5, '2026-03-26 11:00:00', '2026-03-28 09:00:00', 'with-driver', 2600000.00, 'cancelled', '2026-03-25 18:42:20'),
 (23, 1, 5, '2026-04-02 10:00:00', '2026-04-10 09:00:00', 'with-driver', 10400000.00, 'cancelled', '2026-03-25 18:43:30'),
 (24, 1, 25, '2026-03-26 10:12:00', '2026-03-26 10:13:00', 'self-drive', 30000.00, 'completed', '2026-03-26 03:08:18'),
-(28, 9, 5, '2026-03-26 09:00:00', '2026-03-28 09:00:00', 'with-driver', 1950000.00, 'confirmed', '2026-03-26 05:04:12'),
-(29, 1, 5, '2026-03-29 09:00:00', '2026-03-31 09:00:00', 'self-drive', 1200000.00, 'pending', '2026-03-26 05:25:36'),
-(30, 1, 25, '2026-04-05 09:00:00', '2026-04-06 09:00:00', 'with-driver', 700000.00, 'pending', '2026-03-26 08:18:37'),
-(31, 1, 25, '2026-04-12 09:00:00', '2026-04-14 09:00:00', 'with-driver', 1400000.00, 'pending', '2026-03-26 08:19:55'),
-(32, 11, 5, '2026-04-01 09:00:00', '2026-04-04 09:00:00', 'self-drive', 2400000.00, 'confirmed', '2026-03-26 08:43:10');
+(28, 9, 5, '2026-03-26 09:00:00', '2026-03-28 09:00:00', 'with-driver', 1950000.00, 'completed', '2026-03-26 05:04:12'),
+(29, 1, 5, '2026-03-29 09:00:00', '2026-03-31 09:00:00', 'self-drive', 1200000.00, 'completed', '2026-03-26 05:25:36'),
+(30, 1, 25, '2026-04-05 09:00:00', '2026-04-06 09:00:00', 'with-driver', 700000.00, 'confirmed', '2026-03-26 08:18:37'),
+(31, 1, 25, '2026-04-12 09:00:00', '2026-04-14 09:00:00', 'with-driver', 1400000.00, 'confirmed', '2026-03-26 08:19:55'),
+(33, 1, 25, '2026-04-01 12:00:00', '2026-04-04 09:00:00', 'with-driver', 1575000.00, 'confirmed', '2026-04-01 04:56:28');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `callback_requests`
+--
+
+CREATE TABLE `callback_requests` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `incident_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `phone_number` varchar(20) NOT NULL,
+  `note` varchar(255) DEFAULT NULL,
+  `preferred_time` datetime DEFAULT NULL,
+  `status` enum('new','called','no_answer','completed') NOT NULL DEFAULT 'new',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `callback_requests`
+--
+
+INSERT INTO `callback_requests` (`id`, `user_id`, `incident_id`, `phone_number`, `note`, `preferred_time`, `status`, `created_at`, `updated_at`) VALUES
+(1, 1, NULL, '0907495718', NULL, '2026-03-27 18:40:00', 'completed', '2026-03-27 11:41:13', '2026-03-27 12:01:06'),
+(2, 1, 2, '0907495718', 'help me', '2026-03-27 18:48:00', 'completed', '2026-03-27 11:48:41', '2026-03-27 12:01:04'),
+(3, 1, 3, '0907495718', 'help me please, i dont find you card', '2026-03-27 13:00:17', 'completed', '2026-03-27 12:00:17', '2026-03-27 12:01:00');
 
 -- --------------------------------------------------------
 
@@ -119,6 +146,108 @@ INSERT INTO `cars` (`id`, `model_name`, `category`, `seats`, `fuel_type`, `trans
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `incidents`
+--
+
+CREATE TABLE `incidents` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `ticket_code` varchar(30) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `booking_id` int(11) DEFAULT NULL,
+  `channel` enum('web_form','phone','callback','live_chat') NOT NULL DEFAULT 'web_form',
+  `category` enum('booking_error','vehicle_issue','payment','app_bug','other') NOT NULL DEFAULT 'other',
+  `priority` enum('low','medium','high','urgent') NOT NULL DEFAULT 'medium',
+  `subject` varchar(200) NOT NULL,
+  `description` text NOT NULL,
+  `status` enum('new','open','in_progress','pending_user','resolved','closed') NOT NULL DEFAULT 'new',
+  `assigned_admin_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `resolved_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `incidents`
+--
+
+INSERT INTO `incidents` (`id`, `ticket_code`, `user_id`, `booking_id`, `channel`, `category`, `priority`, `subject`, `description`, `status`, `assigned_admin_id`, `created_at`, `updated_at`, `resolved_at`) VALUES
+(1, 'INC-2026-777612', 1, 31, 'web_form', 'other', 'medium', 'Bad sevice', 'aaaaaaaaaaaaaaaa', 'closed', 1, '2026-03-27 11:40:19', '2026-03-27 12:01:23', NULL),
+(2, 'INC-2026-245305', 1, NULL, 'callback', 'other', 'medium', 'Callback request from customer', 'help me', 'closed', 1, '2026-03-27 11:48:41', '2026-03-27 12:01:45', NULL),
+(3, 'INC-2026-857774', 1, NULL, 'callback', 'other', 'medium', 'Callback request from customer', 'help me please, i dont find you card', 'closed', NULL, '2026-03-27 12:00:17', '2026-03-27 12:02:11', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `incident_messages`
+--
+
+CREATE TABLE `incident_messages` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `incident_id` bigint(20) UNSIGNED NOT NULL,
+  `sender_type` enum('user','admin','system') NOT NULL,
+  `sender_id` int(11) DEFAULT NULL,
+  `message` text NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `incident_messages`
+--
+
+INSERT INTO `incident_messages` (`id`, `incident_id`, `sender_type`, `sender_id`, `message`, `created_at`) VALUES
+(1, 1, 'system', NULL, 'Incident created via web form.', '2026-03-27 11:40:19'),
+(2, 1, 'system', NULL, 'Status changed from new to open.', '2026-03-27 11:46:35'),
+(3, 1, 'admin', 1, 'bbbbbbbbbbbbbb', '2026-03-27 11:46:49'),
+(4, 1, 'user', 1, 'cccccccccccc', '2026-03-27 11:47:30'),
+(5, 1, 'user', 1, 'tttttttttt', '2026-03-27 11:47:42'),
+(6, 2, 'system', NULL, 'Callback request linked to this incident.', '2026-03-27 11:48:41'),
+(7, 2, 'system', NULL, 'Status changed from new to pending_user.', '2026-03-27 11:49:45'),
+(8, 3, 'system', NULL, 'Callback request linked to this incident.', '2026-03-27 12:00:17'),
+(9, 3, 'system', NULL, 'Callback status changed from new to completed.', '2026-03-27 12:01:00'),
+(10, 2, 'system', NULL, 'Callback status changed from new to completed.', '2026-03-27 12:01:04'),
+(11, 1, 'system', NULL, 'Status changed from open to closed.', '2026-03-27 12:01:23'),
+(12, 2, 'system', NULL, 'Status changed from pending_user to closed.', '2026-03-27 12:01:45'),
+(13, 3, 'system', NULL, 'Status changed from new to closed.', '2026-03-27 12:02:11');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `password_reset_otps`
+--
+
+CREATE TABLE `password_reset_otps` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `email` varchar(150) NOT NULL,
+  `otp_code` varchar(6) NOT NULL,
+  `expires_at` datetime NOT NULL,
+  `used_at` datetime DEFAULT NULL,
+  `attempts` tinyint(3) UNSIGNED NOT NULL DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `request_ip` varchar(45) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `password_reset_otps`
+--
+
+INSERT INTO `password_reset_otps` (`id`, `user_id`, `email`, `otp_code`, `expires_at`, `used_at`, `attempts`, `created_at`, `request_ip`) VALUES
+(1, 12, 'tantvgcs220674@fpt.edu.vn', '796812', '2026-03-27 07:41:18', '2026-03-27 13:37:29', 0, '2026-03-27 06:36:18', '::1'),
+(2, 12, 'tantvgcs220674@fpt.edu.vn', '611075', '2026-03-27 07:42:29', '2026-03-27 13:46:44', 0, '2026-03-27 06:37:29', '::1'),
+(3, 12, 'tantvgcs220674@fpt.edu.vn', '124916', '2026-03-27 07:51:44', '2026-03-27 13:49:05', 0, '2026-03-27 06:46:44', '::1'),
+(4, 12, 'tantvgcs220674@fpt.edu.vn', '901265', '2026-03-27 07:54:05', '2026-03-27 13:59:19', 0, '2026-03-27 06:49:05', '::1'),
+(5, 12, 'tantvgcs220674@fpt.edu.vn', '983905', '2026-03-27 14:04:19', '2026-03-27 13:59:29', 0, '2026-03-27 06:59:19', '::1'),
+(6, 12, 'tantvgcs220674@fpt.edu.vn', '528258', '2026-03-27 14:05:16', '2026-03-27 14:00:40', 0, '2026-03-27 07:00:16', '::1'),
+(7, 1, 'tan0979876976@gmail.com', '853300', '2026-03-27 14:08:04', '2026-03-27 14:03:50', 0, '2026-03-27 07:03:04', '::1'),
+(8, 1, 'tan0979876976@gmail.com', '747835', '2026-03-27 14:23:14', '2026-03-27 14:18:32', 0, '2026-03-27 07:18:14', '::1'),
+(9, 1, 'tan0979876976@gmail.com', '216044', '2026-03-27 14:26:27', '2026-03-27 14:21:40', 0, '2026-03-27 07:21:27', '::1'),
+(10, 1, 'tan0979876976@gmail.com', '650665', '2026-03-27 14:27:33', '2026-03-27 14:22:50', 0, '2026-03-27 07:22:33', '::1'),
+(11, 12, 'tantvgcs220674@fpt.edu.vn', '518687', '2026-03-27 14:28:24', '2026-03-27 14:23:56', 0, '2026-03-27 07:23:24', '::1'),
+(12, 1, 'tan0979876976@gmail.com', '941792', '2026-03-27 14:35:54', NULL, 0, '2026-03-27 07:30:54', '::1');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `payments`
 --
 
@@ -155,7 +284,7 @@ INSERT INTO `payments` (`id`, `booking_id`, `payment_method`, `amount`, `payment
 (21, 23, 'cash', 800000.00, 'completed', 'TXN69C42CD32DE711774464211', '2026-03-25 18:43:31'),
 (22, 24, 'cash', 30000.00, 'completed', 'TXN69C4A325041841774494501', '2026-03-26 03:08:21'),
 (26, 28, 'cash', 1950000.00, 'completed', 'TXN69C4BE4DEFA901774501453', '2026-03-26 05:04:13'),
-(27, 32, 'cash', 2400000.00, 'completed', 'TXN69C4F19EE3A3B1774514590', '2026-03-26 08:43:10');
+(28, 33, 'cash', 1575000.00, 'completed', 'TXN69CCA57C17CAB1775019388', '2026-04-01 04:56:28');
 
 -- --------------------------------------------------------
 
@@ -185,9 +314,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `fullname`, `email`, `phone`, `password_hash`, `address`, `avatar_url`, `role`, `is_active`, `created_at`, `updated_at`, `membership_tier`, `otp_code`, `is_verified`) VALUES
-(1, 'Minh Hoang', 'tan0979876976@gmail.com', '0907495718', '$2y$10$T/gtH5jFuVwPO0vKs/X5dOC5JEU1p5AivhR8UBcqrGTE6e7x17LOG', NULL, NULL, 'admin', 0, '2026-03-19 05:20:41', '2026-03-21 12:31:54', 'vip', NULL, 0),
+(1, 'Minh Hoang', 'tan0979876976@gmail.com', '0907495718', '$2y$10$WMTlvwW19Ip8SYqvXgtCpOVYikR9oQYkLqyQ.u5XwqFCryd4BujCC', NULL, NULL, 'admin', 0, '2026-03-19 05:20:41', '2026-03-27 07:23:05', 'vip', NULL, 0),
 (9, 'Nguyễn Thị Như Phúc', 'nguyenthinhuphuc06@gmail.com', '0393507177', '$2y$10$uoQGsKbtmE4BXedjx0WnFOR6udtb2I716PQQT6VaLKCsyA/M550yy', NULL, NULL, 'customer', 1, '2026-03-21 15:16:53', '2026-03-21 15:22:27', 'vip', NULL, 1),
-(11, 'Tran Van Tan', 'tantvgcs220674@fpt.edu.vn', '0979876976', '$2y$10$1HR2GEumVE3TrYa7Yb0Y4eGnWK0oHZkLpOq/UtW8vcONxRfraHHii', NULL, NULL, 'customer', 1, '2026-03-26 08:38:08', '2026-03-26 08:38:55', 'new', NULL, 1);
+(12, 'ben ne', 'tantvgcs220674@fpt.edu.vn', '0907495714', '$2y$10$NW6Cl9IBEYowR4J1zSW3L.7luIc3sRpVMvGhMQFRIm1iz.v0JhI7.', NULL, NULL, 'customer', 1, '2026-03-27 06:31:59', '2026-03-27 07:24:09', 'new', NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -226,10 +355,49 @@ ALTER TABLE `bookings`
   ADD KEY `car_id` (`car_id`);
 
 --
+-- Indexes for table `callback_requests`
+--
+ALTER TABLE `callback_requests`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_callback_user_id` (`user_id`),
+  ADD KEY `idx_callback_status` (`status`),
+  ADD KEY `fk_callback_incident` (`incident_id`);
+
+--
 -- Indexes for table `cars`
 --
 ALTER TABLE `cars`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `incidents`
+--
+ALTER TABLE `incidents`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uk_ticket_code` (`ticket_code`),
+  ADD KEY `idx_incidents_user_id` (`user_id`),
+  ADD KEY `idx_incidents_booking_id` (`booking_id`),
+  ADD KEY `idx_incidents_status` (`status`),
+  ADD KEY `idx_incidents_priority` (`priority`),
+  ADD KEY `idx_incidents_channel` (`channel`),
+  ADD KEY `idx_incidents_created_at` (`created_at`);
+
+--
+-- Indexes for table `incident_messages`
+--
+ALTER TABLE `incident_messages`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_incident_messages_incident_id` (`incident_id`),
+  ADD KEY `idx_incident_messages_created_at` (`created_at`);
+
+--
+-- Indexes for table `password_reset_otps`
+--
+ALTER TABLE `password_reset_otps`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_password_reset_otps_user_id` (`user_id`),
+  ADD KEY `idx_password_reset_otps_email` (`email`),
+  ADD KEY `idx_password_reset_otps_expires_at` (`expires_at`);
 
 --
 -- Indexes for table `payments`
@@ -260,7 +428,13 @@ ALTER TABLE `vouchers`
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+
+--
+-- AUTO_INCREMENT for table `callback_requests`
+--
+ALTER TABLE `callback_requests`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `cars`
@@ -269,16 +443,34 @@ ALTER TABLE `cars`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
+-- AUTO_INCREMENT for table `incidents`
+--
+ALTER TABLE `incidents`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `incident_messages`
+--
+ALTER TABLE `incident_messages`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- AUTO_INCREMENT for table `password_reset_otps`
+--
+ALTER TABLE `password_reset_otps`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `vouchers`
@@ -296,6 +488,31 @@ ALTER TABLE `vouchers`
 ALTER TABLE `bookings`
   ADD CONSTRAINT `bookings_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `bookings_ibfk_2` FOREIGN KEY (`car_id`) REFERENCES `cars` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `callback_requests`
+--
+ALTER TABLE `callback_requests`
+  ADD CONSTRAINT `fk_callback_incident` FOREIGN KEY (`incident_id`) REFERENCES `incidents` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `fk_callback_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `incidents`
+--
+ALTER TABLE `incidents`
+  ADD CONSTRAINT `fk_incidents_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `incident_messages`
+--
+ALTER TABLE `incident_messages`
+  ADD CONSTRAINT `fk_incident_messages_incident` FOREIGN KEY (`incident_id`) REFERENCES `incidents` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `password_reset_otps`
+--
+ALTER TABLE `password_reset_otps`
+  ADD CONSTRAINT `fk_password_reset_otps_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `payments`

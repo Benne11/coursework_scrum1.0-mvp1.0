@@ -22,28 +22,15 @@ $featuredDistricts = $featuredDistricts ?? [];
 </head>
 
 <body>
-    <div class="navbar">
-        <div class="logo"><strong>Born Car</strong></div>
-        <div class="nav-links">
-            <a href="index.php?action=home" class="active">Home</a>
-            <a href="index.php?action=browse_cars">Browse Cars</a>
-            <?php if (isset($_SESSION['user'])): ?>
-                <a href="index.php?action=my_bookings">My Bookings</a>
-                <span class="user-greeting">Hi, <?= htmlspecialchars($_SESSION['user']['fullname']) ?></span>
-                <a href="index.php?action=logout" class="nav-link-accent">Logout</a>
-            <?php else: ?>
-                <a href="index.php?action=login_form">Login</a>
-            <?php endif; ?>
-        </div>
-    </div>
+    <?php require_once __DIR__ . '/../layouts/header.php'; ?>
 
     <section class="hero-banner" aria-label="Homepage hero banner">
         <div class="hero-slider" aria-hidden="true">
-            <img class="hero-slide-image active" src="images/Screenshot%202026-03-26%20141821.png" alt="Hero slide 1">
-            <img class="hero-slide-image" src="images/Screenshot%202026-03-26%20142147.png" alt="Hero slide 2">
-            <img class="hero-slide-image" src="images/Screenshot%202026-03-26%20142250.png" alt="Hero slide 3">
-            <img class="hero-slide-image" src="images/Screenshot%202026-03-26%20142715.png" alt="Hero slide 4">
-            <img class="hero-slide-image" src="images/Screenshot%202026-03-26%20142946.png" alt="Hero slide 5">
+            <img class="hero-slide-image active" src="https://cdn.tcdulichtphcm.vn/upload/2-2021/images/2021-04-28/1619581962-driving-tests-1594201852-8998-1594261551.jpg" alt="Hero slide 1">
+            <img class="hero-slide-image" src="https://cdn.tcdulichtphcm.vn/upload/2-2021/images/2021-04-28/1619582030-camtraibangoto_ramm.jpg" alt="Hero slide 2">
+            <img class="hero-slide-image" src="https://media.istockphoto.com/id/1155030342/vi/anh/ch%C3%B3-%C4%91i-du-l%E1%BB%8Bch-b%E1%BA%B1ng-xe-h%C6%A1i.jpg?s=1024x1024&w=is&k=20&c=4us31SrveRNfgDSIgu6_gG9uCNw50nwCfdRjDg3VXKg=" alt="Hero slide 3">
+            <img class="hero-slide-image" src="https://bizweb.dktcdn.net/100/448/536/files/du-lich-iceland-1.jpg?v=1715836500137" alt="Hero slide 4">
+            <img class="hero-slide-image" src="https://tourquangbinh.vn/wp-content/uploads/2024/07/9-nhung-uu-diem-khi-lua-chon-du-lich-bang-xe-o-to.jpg" alt="Hero slide 5">
         </div>
 
         <div class="hero-overlay"></div>
@@ -106,20 +93,20 @@ $featuredDistricts = $featuredDistricts ?? [];
                 <div class="districts-track" id="districtsTrack">
                     <?php
                     $districtImageMap = [
-                        'District 1' => 'https://images.unsplash.com/photo-1565967511849-76a60a516170?auto=format&fit=crop&w=1200&q=80',
-                        'District 3' => 'https://images.unsplash.com/photo-1583417319070-4a69db38a482?auto=format&fit=crop&w=1200&q=80',
-                        'District 4' => 'https://images.unsplash.com/photo-1470004914212-05527e49370b?auto=format&fit=crop&w=1200&q=80',
-                        'District 5' => 'https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&w=1200&q=80',
+                        'District 1' => 'https://images.unsplash.com/photo-1583417319070-4a69db38a482?auto=format&fit=crop&w=1200&q=80',
+                        'District 3' => 'https://offer.rever.vn/hubfs/shutterstock-1120258289.jpg',
+                        'District 4' => 'https://statics.vinpearl.com/quan-4-co-gi-choi-3_1630224827.jpg',
+                        'District 5' => 'https://cdn.tgdd.vn/Files/2021/10/29/1394233/10-chon-vui-choi-noi-tieng-o-quan-5-giup-ban-thu-gian-sau-ngay-dai-met-moi-202302262018034793.jpg',
                         'District 6' => 'https://images.unsplash.com/photo-1505764706515-aa95265c5abc?auto=format&fit=crop&w=1200&q=80',
-                        'District 7' => 'https://images.unsplash.com/photo-1499092346589-b9b6be3e94b2?auto=format&fit=crop&w=1200&q=80',
-                        'District 10' => 'https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=1200&q=80',
-                        'District 11' => 'https://images.unsplash.com/photo-1549692520-acc6669e2f0c?auto=format&fit=crop&w=1200&q=80',
-                        'Binh Thanh District' => 'https://images.unsplash.com/photo-1508057198894-247b23fe5ade?auto=format&fit=crop&w=1200&q=80',
+                        'District 7' => 'https://offer.rever.vn/hubfs/dia-diem-vui-choi-tai-quan-7-7.jpg',
+                        'District 10' => 'https://cdn.tgdd.vn/Files/2021/11/08/1396540/10-diem-vui-choi-giai-tri-dang-hot-ran-ran-tai-quan-10-ma-ban-khong-nen-bo-lo-202303012300233972.jpg',
+                        'District 11' => 'https://maisonoffice.vn/wp-content/uploads/2024/04/5-cong-vien-van-hoa-dam-sen.jpg',
+                        'Binh Thanh District' => 'https://cdn.tgdd.vn/Files/2023/03/03/1514450/nhung-dia-diem-vui-choi-quan-binh-thanh-nhat-dinh-phai-den-202303030818220063.jpg',
                         'Go Vap District' => 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=1200&q=80',
                         'Phu Nhuan District' => 'https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1200&q=80',
                         'Tan Binh District' => 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1200&q=80',
                         'Tan Phu District' => 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80',
-                        'Binh Tan District' => 'https://images.unsplash.com/photo-1439066615861-d1af74d74000?auto=format&fit=crop&w=1200&q=80'
+                        'Binh Tan District' => 'https://cdn.tgdd.vn/Files/2023/03/03/1514646/dia-diem-vui-choi-quan-binh-tan-10-dia-diem-nhat-dinh-phai-checkin-202303041512117711.jpg',
                     ];
                     $districtFallbackImage = 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=1200&q=80';
                     ?>
@@ -137,8 +124,8 @@ $featuredDistricts = $featuredDistricts ?? [];
                             <div class="district-card-content">
                                 <h3 class="district-card-name"><?= $districtName ?></h3>
                                 <div class="district-card-footer">
-                                    <p class="district-card-count">📍 <?= htmlspecialchars((string) $districtCars) ?>+ xe</p>
-                                    <a class="district-card-btn" href="index.php?action=browse_cars&district=<?= urlencode((string) ($districtItem['district'] ?? '')) ?>">TÌM XE</a>
+                                    <p class="district-card-count">📍 <?= htmlspecialchars((string) $districtCars) ?>+ cars</p>
+                                    <a class="district-card-btn" href="index.php?action=browse_cars&district=<?= urlencode((string) ($districtItem['district'] ?? '')) ?>">Find Cars</a>
                                 </div>
                             </div>
                         </article>
@@ -345,6 +332,20 @@ $featuredDistricts = $featuredDistricts ?? [];
 
         <?php endif; ?>
     </div>
+
+    <section class="support-cta-section">
+        <div class="container support-cta-wrap">
+            <div>
+                <h2>Need help?</h2>
+                <p>Report an issue, request callback, or call hotline for immediate support.</p>
+            </div>
+            <div class="support-cta-actions">
+                <a href="index.php?action=support_create" class="btn-confirm">Report Issue</a>
+                <a href="index.php?action=support_list" class="btn-book">My Tickets</a>
+                <span class="support-hotline">Hotline: 1900 8888</span>
+            </div>
+        </div>
+    </section>
 
     <?php require_once __DIR__ . '/../layouts/footer.php'; ?>
 

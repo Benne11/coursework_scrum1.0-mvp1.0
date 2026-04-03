@@ -20,21 +20,7 @@
 </head>
 
 <body>
-
-    <div class="navbar">
-        <div class="logo"><strong>Born Car</strong></div>
-        <div class="nav-links">
-            <a href="index.php?action=home">Home</a>
-            <a href="index.php?action=browse_cars" class="active">Browse Cars</a>
-            <?php if (isset($_SESSION['user'])): ?>
-                <a href="index.php?action=my_bookings">My Bookings</a>
-                <span class="user-greeting">Hi, <?= htmlspecialchars($_SESSION['user']['fullname']) ?></span>
-                <a href="index.php?action=logout" style="color: #f48f0c;">Logout</a>
-            <?php else: ?>
-                <a href="index.php?action=login_form">Login</a>
-            <?php endif; ?>
-        </div>
-    </div>
+    <?php require_once __DIR__ . '/../layouts/header.php'; ?>
 
     <div class="container">
         <h2 class="page-title">Available Cars for Rent</h2>
