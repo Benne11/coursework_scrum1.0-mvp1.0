@@ -3,6 +3,7 @@
 // View để nhập mã OTP xác thực email
 
 $email = $_GET['email'] ?? '';
+$returnTo = $_GET['return_to'] ?? 'index.php?action=browse_cars';
 $error = '';
 if (isset($_SESSION['otp_error'])) {
     $error = $_SESSION['otp_error'];
@@ -20,6 +21,8 @@ if (isset($_SESSION['otp_error'])) {
 </head>
 
 <body>
+
+    <?php require_once __DIR__ . '/../layouts/header.php'; ?>
 
     <div class="otp-container">
         <h2>Verify Your Email</h2>
@@ -39,6 +42,7 @@ if (isset($_SESSION['otp_error'])) {
 
         <form action="index.php?action=verify_otp_submit" method="POST">
             <input type="hidden" name="email" value="<?= htmlspecialchars($email) ?>">
+            <input type="hidden" name="return_to" value="<?= htmlspecialchars($returnTo) ?>">
 
             <div class="form-group">
                 <label for="otp">Enter 6-Digit Code</label>
@@ -48,7 +52,7 @@ if (isset($_SESSION['otp_error'])) {
             <button type="submit">Verify Account</button>
         </form>
 
-        <a href="index.php?action=login_form" class="back-link" onclick="if (window.history.length > 1) { event.preventDefault(); window.history.back(); }">&larr; Back</a>
+        <a href="<?= htmlspecialchars($returnTo) ?>" class="back-link" onclick="if (window.history.length > 1) { event.preventDefault(); window.history.back(); }">&larr; Back</a>
     </div>
 
 </body>

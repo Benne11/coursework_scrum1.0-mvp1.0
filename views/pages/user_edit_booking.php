@@ -34,21 +34,7 @@ if (!empty($booking)) {
 </head>
 
 <body>
-    <!-- Navbar from layout/header or similar -->
-    <div class="navbar">
-        <div class="logo"><strong>Born Car</strong></div>
-        <div class="nav-links">
-            <a href="index.php?action=home">Home</a>
-            <a href="index.php?action=browse_cars">Browse Cars</a>
-            <?php if (isset($_SESSION['user'])): ?>
-                <?php if (isset($_SESSION['user']['role']) && $_SESSION['user']['role'] === 'admin'): ?>
-                    <!--<a href="index.php?action=admin_dashboard" style="color: #f48f0c;">Admin Panel</a>-->
-                <?php endif; ?>
-                <a href="index.php?action=my_bookings">My Bookings</a>
-                <a href="index.php?action=logout">Logout (<?= htmlspecialchars($_SESSION['user']['fullname']) ?>)</a>
-            <?php endif; ?>
-        </div>
-    </div>
+    <?php require_once __DIR__ . '/../layouts/header.php'; ?>
 
     <!-- Main Content -->
     <div class="edit-container container-fluid px-lg-5 mt-5" style="max-width: 1400px;">
