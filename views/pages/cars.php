@@ -20,21 +20,7 @@
 </head>
 
 <body>
-
-    <div class="navbar">
-        <div class="logo"><strong>Born Car</strong></div>
-        <div class="nav-links">
-            <a href="index.php?action=home">Home</a>
-            <a href="index.php?action=browse_cars" class="active">Browse Cars</a>
-            <?php if (isset($_SESSION['user'])): ?>
-                <a href="index.php?action=my_bookings">My Bookings</a>
-                <span class="user-greeting">Hi, <?= htmlspecialchars($_SESSION['user']['fullname']) ?></span>
-                <a href="index.php?action=logout" style="color: #f48f0c;">Logout</a>
-            <?php else: ?>
-                <a href="index.php?action=login_form">Login</a>
-            <?php endif; ?>
-        </div>
-    </div>
+    <?php require_once __DIR__ . '/../layouts/header.php'; ?>
 
     <div class="container">
         <h2 class="page-title">Available Cars for Rent</h2>
@@ -59,10 +45,10 @@
                 </div>
 
                 <div class="form-group">
-                    <select name="transmission">
-                        <option value="all">All Transmissions</option>
-                        <option value="auto" <?= (isset($activeFilters['transmission']) && $activeFilters['transmission'] === 'auto') ? 'selected' : '' ?>>Auto</option>
-                        <option value="manual" <?= (isset($activeFilters['transmission']) && $activeFilters['transmission'] === 'manual') ? 'selected' : '' ?>>Manual</option>
+                    <select name="seats">
+                        <option value="all">All Seats</option>
+                        <option value="5" <?= (isset($activeFilters['seats']) && (string) $activeFilters['seats'] === '5') ? 'selected' : '' ?>>5 Seats</option>
+                        <option value="7" <?= (isset($activeFilters['seats']) && (string) $activeFilters['seats'] === '7') ? 'selected' : '' ?>>7 Seats</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -74,7 +60,7 @@
                 </div>
 
                 <button type="submit">Search</button>
-                <?php if (!empty($activeFilters['keyword']) || !empty($activeFilters['category']) || !empty($activeFilters['transmission']) || !empty($activeFilters['district'])): ?>
+                <?php if (!empty($activeFilters['keyword']) || !empty($activeFilters['category']) || !empty($activeFilters['seats']) || !empty($activeFilters['district'])): ?>
                     <a href="index.php?action=browse_cars" class="reset-btn">Reset</a>
                 <?php endif; ?>
             </form>

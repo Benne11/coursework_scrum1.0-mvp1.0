@@ -43,20 +43,7 @@ $durationText = ($diffHours < 24) ? "{$diffHours} Hours" : "{$diffDays} Days";
 </head>
 
 <body>
-
-    <div class="navbar">
-        <div class="logo"><strong>Born Car</strong></div>
-        <div class="nav-links">
-            <a href="index.php?action=home">Home</a>
-            <?php if (isset($_SESSION['user'])): ?>
-                <?php if (isset($_SESSION['user']['role']) && $_SESSION['user']['role'] === 'admin'): ?>
-                    <!--<a href="index.php?action=admin_dashboard" style="color: #f48f0c;">Admin Panel</a>-->
-                <?php endif; ?>
-                <a href="index.php?action=my_bookings">My Bookings</a>
-                <a href="index.php?action=logout">Logout (<?= htmlspecialchars($_SESSION['user']['fullname']) ?>)</a>
-            <?php endif; ?>
-        </div>
-    </div>
+    <?php require_once __DIR__ . '/../layouts/header.php'; ?>
 
     <div class="preview-container">
         <h1 class="title">Booking Preview</h1>
@@ -99,7 +86,18 @@ $durationText = ($diffHours < 24) ? "{$diffHours} Hours" : "{$diffDays} Days";
                         🔑 Self-Drive
                     <?php endif; ?>
                 </span>
+
+
             </div>
+            <div class="detail-item">
+                <label>Pick-up Area</label>
+                <span><?= htmlspecialchars($booking['pickup_area'] ?? '') ?></span>
+            </div>
+            <div class="detail-item">
+                <label>Pick-up Landmark</label>
+                <span><?= htmlspecialchars($booking['pickup_landmark'] ?? '') ?></span>
+            </div>
+
         </div>
 
         <!-- Price Breakdown -->
@@ -136,6 +134,8 @@ $durationText = ($diffHours < 24) ? "{$diffHours} Hours" : "{$diffDays} Days";
             <input type="hidden" name="pickup_datetime" value="<?= htmlspecialchars($booking['pickup_datetime']) ?>">
             <input type="hidden" name="dropoff_datetime" value="<?= htmlspecialchars($booking['dropoff_datetime']) ?>">
             <input type="hidden" name="service_type" value="<?= htmlspecialchars($booking['service_type']) ?>">
+            <input type="hidden" name="pickup_area" value="<?= htmlspecialchars($booking['pickup_area'] ?? '') ?>">
+            <input type="hidden" name="pickup_landmark" value="<?= htmlspecialchars($booking['pickup_landmark'] ?? '') ?>">
 
             <strong style="white-space: nowrap; color: #495057;">Got a Voucher?</strong>
             <select name="voucher_code" id="voucherSelect" style="flex: 1; padding: 12px 15px; border: 1px solid #ced4da; border-radius: 6px; font-size: 15px; outline: none;">

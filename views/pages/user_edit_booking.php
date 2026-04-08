@@ -34,21 +34,7 @@ if (!empty($booking)) {
 </head>
 
 <body>
-    <!-- Navbar from layout/header or similar -->
-    <div class="navbar">
-        <div class="logo"><strong>Born Car</strong></div>
-        <div class="nav-links">
-            <a href="index.php?action=home">Home</a>
-            <a href="index.php?action=browse_cars">Browse Cars</a>
-            <?php if (isset($_SESSION['user'])): ?>
-                <?php if (isset($_SESSION['user']['role']) && $_SESSION['user']['role'] === 'admin'): ?>
-                    <!--<a href="index.php?action=admin_dashboard" style="color: #f48f0c;">Admin Panel</a>-->
-                <?php endif; ?>
-                <a href="index.php?action=my_bookings">My Bookings</a>
-                <a href="index.php?action=logout">Logout (<?= htmlspecialchars($_SESSION['user']['fullname']) ?>)</a>
-            <?php endif; ?>
-        </div>
-    </div>
+    <?php require_once __DIR__ . '/../layouts/header.php'; ?>
 
     <!-- Main Content -->
     <div class="edit-container container-fluid px-lg-5 mt-5" style="max-width: 1400px;">
@@ -174,6 +160,56 @@ if (!empty($booking)) {
                                 <option value="self-drive" <?= (isset($booking['service_type']) && $booking['service_type'] == 'self-drive') ? 'selected' : '' ?>>Self-drive (No additional cost)</option>
                                 <option value="with-driver" <?= (isset($booking['service_type']) && $booking['service_type'] == 'with-driver') ? 'selected' : '' ?>>With Driver (+500,000 đ / Day)</option>
                             </select>
+                        </div>
+
+                        <div class="form-group pickup-area-group mb-4">
+                            <div class="pickup-area">
+                                <label for="pickup_area" class="form-label">Pick-up Area</label>
+                                <select id="pickup_area" name="pickup_area" class="form-select" required>
+                                    <?php
+                                    $selectedArea = $booking['pickup_area'] ?? '';
+                                    $areas = [
+                                        'District 1',
+                                        'District 2',
+                                        'District 3',
+                                        'District 4',
+                                        'District 5',
+                                        'District 6',
+                                        'District 7',
+                                        'District 8',
+                                        'District 9',
+                                        'District 10',
+                                        'District 11',
+                                        'District 12',
+                                        'Binh Thanh District',
+                                        'Phu Nhuan District',
+                                        'Tan Binh District',
+                                        'Tan Phu District',
+                                        'Go Vap District',
+                                        'Thu Duc City'
+                                    ];
+                                    ?>
+                                    <option value="">Select Pick-up Area</option>
+                                    <?php foreach ($areas as $area): ?>
+                                        <option value="<?= htmlspecialchars($area) ?>" <?= ($selectedArea === $area) ? 'selected' : '' ?>>
+                                            <?= htmlspecialchars($area) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+
+                            <div class="pickup-area">
+                                <label for="pickup_landmark" class="form-label">Pick-up Landmark</label>
+                                <input
+                                    type="text"
+                                    id="pickup_landmark"
+                                    name="pickup_landmark"
+                                    class="form-control"
+                                    maxlength="100"
+                                    placeholder="Example: Vincom Center"
+                                    value="<?= htmlspecialchars($booking['pickup_landmark'] ?? '') ?>"
+                                    required>
+                            </div>
                         </div>
 
                         <div class="total-price-display mb-3">

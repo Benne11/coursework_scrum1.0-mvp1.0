@@ -13,6 +13,65 @@ require_once __DIR__ . '/../datafunctions/booking_functions.php';
 
 $action = $_GET['action'] ?? '';
 
+function bookingCardDigitsOnly(string $cardNumber): string
+{
+    return preg_replace('/\D+/', '', $cardNumber) ?? '';
+}
+
+function bookingIsValidCardNumberLuhn(string $cardNumber): bool
+{
+    $digits = bookingCardDigitsOnly($cardNumber);
+    $length = strlen($digits);
+
+    if ($length < 13 || $length > 19) {
+        return false;
+    }
+
+    $sum = 0;
+    $alt = false;
+    for ($i = $length - 1; $i >= 0; $i--) {
+        $n = (int) $digits[$i];
+        if ($alt) {
+            $n *= 2;
+            if ($n > 9) {
+                $n -= 9;
+            }
+        }
+        $sum += $n;
+        $alt = !$alt;
+    }
+
+    return $sum % 10 === 0;
+}
+
+function bookingIsValidExpiry(string $expiry): bool
+{
+    $normalized = str_replace(' ', '', trim($expiry));
+    if (!preg_match('/^(0[1-9]|1[0-2])\/(\d{2}|\d{4})$/', $normalized, $matches)) {
+        return false;
+    }
+
+    $month = (int) $matches[1];
+    $yearRaw = $matches[2];
+    $year = strlen($yearRaw) === 2 ? (2000 + (int) $yearRaw) : (int) $yearRaw;
+
+    if ($year < 2000 || $year > 2100) {
+        return false;
+    }
+
+    $expiryTs = strtotime(sprintf('%04d-%02d-01 00:00:00', $year, $month));
+    if ($expiryTs === false) {
+        return false;
+    }
+
+    $expiryMonthEnd = strtotime('+1 month', $expiryTs);
+    if ($expiryMonthEnd === false) {
+        return false;
+    }
+
+    return $expiryMonthEnd > time();
+}
+
 // Hiển thị Booking Preview theo mô hình GET (PRG)
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && $action === 'book_preview') {
     if (!isset($_SESSION['user'])) {
@@ -110,6 +169,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'update_booking') {
     $dropoff_datetime = $_POST['dropoff_datetime'] ?? '';
     $service_type = $_POST['service_type'] ?? 'self-drive';
 
+    $pickup_area = trim($_POST['pickup_area'] ?? '');
+    $pickup_landmark = trim($_POST['pickup_landmark'] ?? '');
+
+    $allowed_areas = [
+        'District 1',
+        'District 2',
+        'District 3',
+        'District 4',
+        'District 5',
+        'District 6',
+        'District 7',
+        'District 8',
+        'District 9',
+        'District 10',
+        'District 11',
+        'District 12',
+        'Binh Thanh District',
+        'Phu Nhuan District',
+        'Tan Binh District',
+        'Tan Phu District',
+        'Go Vap District',
+        'Thu Duc City',
+    ];
+    // validate location
+    if (!in_array($pickup_area, $allowed_areas, true)) {
+        $_SESSION['error_message'] = "Invalid pickup area selected.";
+        header("Location: index.php?action=book_form&car_id=" . $car_id);
+        exit;
+    }
+    if ($pickup_landmark === '' || mb_strlen($pickup_landmark) > 100) {
+        $_SESSION['error_message'] = "Please enter a pickup landmark (max 100 characters).";
+        header("Location: index.php?action=book_form&car_id=" . $car_id);
+        exit;
+    }
+
     if ($booking_id <= 0 || $car_id <= 0) {
         $_SESSION['error_message'] = "Invalid booking information.";
         header("Location: index.php?action=my_bookings");
@@ -139,6 +233,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'update_booking') {
             exit;
         }
 
+        if (!in_array($existing['status'], ['pending', 'confirmed'], true)) {
+            $_SESSION['error_message'] = "Only pending or confirmed bookings can be updated.";
+            header("Location: index.php?action=my_bookings");
+            exit;
+        }
+
+        if (!isBookingWithin24Hours((string)$existing['created_at'])) {
+            $_SESSION['error_message'] = "You can only edit a booking within 24 hours after placing it.";
+            header("Location: index.php?action=my_bookings");
+            exit;
+        }
+
         // Validate Overlap (EXCLUDING current booking)
         $isAvailable = checkCarAvailability($db, $car_id, $pickup_datetime, $dropoff_datetime, $booking_id);
         if (!$isAvailable) {
@@ -158,7 +264,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'update_booking') {
         $total_price = $priceBreakdown['subtotal'];
 
         // Execute Update
-        $success = updateUserBooking($db, $pickup_datetime, $dropoff_datetime, $service_type, $total_price, $booking_id, $_SESSION['user']['id']);
+        $success = updateUserBooking(
+            $db,
+            $pickup_datetime,
+            $dropoff_datetime,
+            $service_type,
+            $total_price,
+            $booking_id,
+            $_SESSION['user']['id'],
+            $pickup_area,
+            $pickup_landmark
+        );
 
         if ($success) {
             $_SESSION['success_message'] = "Booking #$booking_id updated successfully!";
@@ -189,6 +305,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'book_preview') {
     $pickup_datetime = $_POST['pickup_datetime'] ?? '';
     $dropoff_datetime = $_POST['dropoff_datetime'] ?? '';
     $service_type = $_POST['service_type'] ?? 'self-drive'; // 'self-drive' hoặc 'with-driver'
+    $pickup_area = trim($_POST['pickup_area'] ?? '');
+    $pickup_landmark = trim($_POST['pickup_landmark'] ?? '');
+
+    $allowed_areas = [
+        'District 1',
+        'District 2',
+        'District 3',
+        'District 4',
+        'District 5',
+        'District 6',
+        'District 7',
+        'District 8',
+        'District 9',
+        'District 10',
+        'District 11',
+        'District 12',
+        'Binh Thanh District',
+        'Phu Nhuan District',
+        'Tan Binh District',
+        'Tan Phu District',
+        'Go Vap District',
+        'Thu Duc City',
+    ];
+
+    if (!in_array($pickup_area, $allowed_areas, true)) {
+        $_SESSION['error_message'] = "Please select a valid pick-up area.";
+        header("Location: index.php?action=book_form&car_id=" . $car_id);
+        exit;
+    }
+
+    if ($pickup_landmark === '' || mb_strlen($pickup_landmark) > 100) {
+        $_SESSION['error_message'] = "Please enter a valid pick-up landmark (max 100 characters).";
+        header("Location: index.php?action=book_form&car_id=" . $car_id);
+        exit;
+    }
 
     // Validation ngày giờ
     $now = time();
@@ -254,6 +405,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'book_preview') {
             'pickup_datetime' => $pickup_datetime,
             'dropoff_datetime' => $dropoff_datetime,
             'service_type' => $service_type,
+            'pickup_area' => $pickup_area,
+            'pickup_landmark' => $pickup_landmark,
             'breakdown' => $priceBreakdown
         ];
 
@@ -323,6 +476,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && $action === 'payment_gateway') {
                 header("Location: index.php?action=browse_cars");
                 exit;
             }
+
+            if (empty($_SESSION['pending_payment_token'])) {
+                $_SESSION['pending_payment_token'] = bin2hex(random_bytes(16));
+            }
         } else {
             // Luồng chuẩn: dùng pending_booking trong session, chưa ghi DB
             if (!isset($_SESSION['pending_booking'])) {
@@ -359,6 +516,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'process_payment') {
     $booking_id = isset($_POST['booking_id']) ? (int)$_POST['booking_id'] : 0;
     $payment_method = $_POST['payment_method'] ?? 'cash'; // 'cash', 'bank_transfer', 'momo', 'credit_card'
     $payment_token = $_POST['payment_token'] ?? '';
+
+    $allowedPaymentMethods = ['cash', 'bank_transfer', 'momo', 'credit_card'];
+    if (!in_array($payment_method, $allowedPaymentMethods, true)) {
+        $_SESSION['error_message'] = "Invalid payment method selected.";
+        header("Location: index.php?action=payment_gateway" . ($booking_id > 0 ? "&booking_id=" . $booking_id : ""));
+        exit;
+    }
 
     try {
         if (empty($_SESSION['pending_payment_token']) || !hash_equals($_SESSION['pending_payment_token'], $payment_token)) {
@@ -397,7 +561,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'process_payment') {
                 'pickup_datetime' => $pickup_datetime,
                 'dropoff_datetime' => $dropoff_datetime,
                 'service_type' => (string)($bookingTemp['service_type'] ?? 'self-drive'),
-                'total_price' => (float)($bookingTemp['breakdown']['final_total'] ?? 0)
+                'total_price' => (float)($bookingTemp['breakdown']['final_total'] ?? 0),
+                'pickup_area' => (string)($bookingTemp['pickup_area'] ?? ''),
+                'pickup_landmark' => (string)($bookingTemp['pickup_landmark'] ?? '')
             ];
 
             $booking_id = createBooking($db, $data);
@@ -408,6 +574,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'process_payment') {
 
         if (!$bookingInfo || $bookingInfo['user_id'] != $_SESSION['user']['id']) {
             die("Invalid Booking.");
+        }
+
+        if ($payment_method === 'credit_card') {
+            $cardholderName = trim((string) ($_POST['cardholder_name'] ?? ''));
+            $cardNumberRaw = (string) ($_POST['card_number'] ?? '');
+            $expiryDate = trim((string) ($_POST['expiry_date'] ?? ''));
+            $cvv = trim((string) ($_POST['cvv'] ?? ''));
+
+            $validationErrors = [];
+
+            if ($cardholderName === '' || strlen($cardholderName) < 2 || strlen($cardholderName) > 100) {
+                $validationErrors[] = "Cardholder Name is required (2-100 characters).";
+            }
+
+            if (!bookingIsValidCardNumberLuhn($cardNumberRaw)) {
+                $validationErrors[] = "Credit Card Number format is invalid.";
+            }
+
+            if (!preg_match('/^\d{3,4}$/', $cvv)) {
+                $validationErrors[] = "CVV must be 3 or 4 numeric digits.";
+            }
+
+            if (!bookingIsValidExpiry($expiryDate)) {
+                $validationErrors[] = "Expiry Date is invalid or card has expired.";
+            }
+
+            $cardDigits = bookingCardDigitsOnly($cardNumberRaw);
+
+            if (empty($validationErrors) && substr($cardDigits, -4) === '0000') {
+                $validationErrors[] = "Payment failed: Insufficient funds. Please retry with another card.";
+            }
+
+            if (!empty($validationErrors)) {
+                $transaction_id = 'FAIL-' . strtoupper(uniqid());
+                createPayment($db, [
+                    'booking_id' => $booking_id,
+                    'payment_method' => $payment_method,
+                    'amount' => $bookingInfo['total_price'],
+                    'payment_status' => 'failed',
+                    'transaction_id' => $transaction_id
+                ]);
+
+                $_SESSION['error_message'] = implode(' ', $validationErrors) . " Please check your card details and try again.";
+                $_SESSION['pending_payment_token'] = bin2hex(random_bytes(16));
+                header("Location: index.php?action=payment_gateway&booking_id=" . $booking_id);
+                exit;
+            }
         }
 
         // 1. Transaction ID dummy cho Mock Payment

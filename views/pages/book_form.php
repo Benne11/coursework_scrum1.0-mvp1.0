@@ -23,21 +23,7 @@ if (isset($_SESSION['error_message'])) {
 </head>
 
 <body>
-
-    <div class="navbar">
-        <div class="logo"><strong>Born Car</strong></div>
-        <div class="nav-links">
-            <a href="index.php?action=home">Home</a>
-            <a href="index.php?action=browse_cars">Browse Cars</a>
-            <?php if (isset($_SESSION['user'])): ?>
-                <?php if (isset($_SESSION['user']['role']) && $_SESSION['user']['role'] === 'admin'): ?>
-                    <!--<a href="index.php?action=admin_dashboard" style="color: #f48f0c;">Admin Panel</a>-->
-                <?php endif; ?>
-                <a href="index.php?action=my_bookings">My Bookings</a>
-                <a href="index.php?action=logout">Logout (<?= htmlspecialchars($_SESSION['user']['fullname']) ?>)</a>
-            <?php endif; ?>
-        </div>
-    </div>
+    <?php require_once __DIR__ . '/../layouts/header.php'; ?>
 
     <div class="container">
         <a href="index.php?action=car_detail&id=<?= htmlspecialchars($car['id']) ?>" class="btn-back" onclick="if (window.history.length > 1) { event.preventDefault(); window.history.back(); }">&larr; Back</a>
@@ -154,6 +140,30 @@ if (isset($_SESSION['error_message'])) {
                             <option value="with-driver">With Driver (+500,000 đ / Day)</option>
                         </select>
                     </div>
+
+                    <!-- LOCATION -->
+                    <div class="form-group pickup-area-group">
+                        <div class="pickup-area">
+                            <label for="pickup_area">Pick-up Area</label>
+                            <select id="pickup_area" name="pickup_area" class="form-control" required>
+                                <option value="">Select Pick-up Area</option>
+                                <option value="District 1">District 1</option>
+                                <option value="District 3">District 3</option>
+                                <option value="District 5">District 5</option>
+                                <option value="District 7">District 7</option>
+                                <option value="Binh Thanh District">Binh Thanh District</option>
+                                <option value="Tan Binh District">Tan Binh District</option>
+                                <option value="Phu Nhuan District">Phu Nhuan District</option>
+                                <option value="Go Vap District">Go Vap District</option>
+                                <option value="Thu Duc City">Thu Duc City</option>
+                            </select>
+                        </div>
+                        <div class="pickup-area">
+                            <label for="pickup_landmark">Pick-up Landmark</label>
+                            <input type="text" id="pickup_landmark" name="pickup_landmark" class="form-control" placeholder="Example: Vincom Center" maxlength="100" required>
+                        </div>
+                    </div>
+
 
                     <button type="submit" class="btn-submit">Calculate Price & Continue</button>
                 </form>

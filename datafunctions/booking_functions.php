@@ -5,6 +5,16 @@ require_once __DIR__ . '/../config/database.php';
 
 // Data Function cho phần Booking
 
+function isBookingWithin24Hours(string $created_at): bool
+{
+    $createdTimestamp = strtotime($created_at);
+    if ($createdTimestamp === false) {
+        return false;
+    }
+
+    return (time() - $createdTimestamp) <= 24 * 60 * 60;
+}
+
 function checkCarAvailability(PDO $db, int $car_id, string $pickup, string $dropoff, int $exclude_booking_id = 0): bool
 {
     try {
@@ -155,8 +165,27 @@ function calculateBookingPrice(array $car, string $pickup, string $dropoff, stri
  */
 function createBooking(PDO $db, array $data): int
 {
-    $sql = "INSERT INTO bookings (user_id, car_id, pickup_datetime, dropoff_datetime, service_type, total_price, status) 
-            VALUES (:user_id, :car_id, :pickup_datetime, :dropoff_datetime, :service_type, :total_price, 'pending')";
+    $sql = "INSERT INTO bookings (
+                user_id,
+                car_id,
+                pickup_datetime,
+                dropoff_datetime,
+                service_type,
+                total_price,
+                pickup_area,
+                pickup_landmark,
+                status
+            ) VALUES (
+                :user_id,
+                :car_id,
+                :pickup_datetime,
+                :dropoff_datetime,
+                :service_type,
+                :total_price,
+                :pickup_area,
+                :pickup_landmark,
+                'pending'
+            )";
 
     $stmt = $db->prepare($sql);
     $stmt->execute([
@@ -165,7 +194,9 @@ function createBooking(PDO $db, array $data): int
         ':pickup_datetime' => $data['pickup_datetime'],
         ':dropoff_datetime' => $data['dropoff_datetime'],
         ':service_type' => $data['service_type'],
-        ':total_price' => $data['total_price']
+        ':total_price' => $data['total_price'],
+        ':pickup_area' => $data['pickup_area'] ?? '',
+        ':pickup_landmark' => $data['pickup_landmark'] ?? ''
     ]);
 
     return (int)$db->lastInsertId();
@@ -282,7 +313,8 @@ function getUserBookings(PDO $db, int $user_id): array
         // Tự động kiểm tra và cập nhật trạng thái trước khi lấy dữ liệu cho User
         autoUpdateCompletedBookings($db);
 
-        $sql = "SELECT b.id, b.pickup_datetime, b.dropoff_datetime, b.service_type, b.total_price, b.status, b.created_at, 
+        $sql = "SELECT b.id, b.pickup_datetime, b.dropoff_datetime, b.service_type, b.total_price, b.status, b.created_at,
+                   b.pickup_area, b.pickup_landmark,
                        c.model_name, c.image_url 
                 FROM bookings b 
                 JOIN cars c ON b.car_id = c.id 
@@ -344,7 +376,7 @@ function getBookedSlots(PDO $db, int $car_id, int $exclude_booking_id = 0): arra
     }
 }
 
-function updateUserBooking(PDO $db, $pickup_datetime, $dropoff_datetime, $service_type, $total_price, $booking_id, $user_id)
+function updateUserBooking(PDO $db, $pickup_datetime, $dropoff_datetime, $service_type, $total_price, $booking_id, $user_id, $pickup_area = '', $pickup_landmark = '')
 {
     try {
         $sql = "UPDATE bookings
@@ -352,14 +384,21 @@ function updateUserBooking(PDO $db, $pickup_datetime, $dropoff_datetime, $servic
                     dropoff_datetime = :dropoff_datetime,
                     service_type = :service_type,
                     total_price = :total_price,
+                    pickup_area = :pickup_area,
+                    pickup_landmark = :pickup_landmark,
                     status = 'pending'
-                WHERE id = :booking_id AND user_id = :user_id";
+                                WHERE id = :booking_id
+                                    AND user_id = :user_id
+                                    AND status IN ('pending', 'confirmed')
+                                    AND created_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR)";
         $stmt = $db->prepare($sql);
         return $stmt->execute([
             ':pickup_datetime' => $pickup_datetime,
             ':dropoff_datetime' => $dropoff_datetime,
             ':service_type' => $service_type,
             ':total_price' => $total_price,
+            ':pickup_area' => $pickup_area,
+            ':pickup_landmark' => $pickup_landmark,
             ':booking_id' => $booking_id,
             ':user_id' => $user_id
         ]);
@@ -374,7 +413,8 @@ function cancelBooking(PDO $db, int $booking_id, int $user_id)
         // Chỉ cho phép hủy nếu đơn hàng thuộc về user đó và đang ở trạng thái pending hoặc confirmed
         $stmt = $db->prepare("UPDATE bookings SET status = 'cancelled' 
                              WHERE id = :id AND user_id = :user_id 
-                             AND status IN ('pending', 'confirmed')");
+                             AND status IN ('pending', 'confirmed')
+                             AND created_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR)");
         $stmt->execute([
             ':id' => $booking_id,
             ':user_id' => $user_id

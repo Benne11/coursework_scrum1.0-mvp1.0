@@ -1160,6 +1160,26 @@ body {
   background-color: #e0a800;
 }
 
+.booking-actions .btn-disabled,
+.booking-actions .btn-disabled:hover {
+  background-color: #bdbdbd;
+  color: #666;
+  border: none;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.booking-actions .btn-disabled + .btn-disabled {
+  margin-left: 15px;
+}
+
+.booking-action-note {
+  margin-top: 8px;
+  color: #777;
+  font-size: 13px;
+  text-align: right;
+}
+
 @media (max-width: 768px) {
   .booking-card {
     flex-direction: column;
@@ -1289,8 +1309,46 @@ body {
   font-size: 14px;
 }
 
+.payment-error-box {
+  margin-bottom: 20px;
+}
+
+.card-form-box {
+  border: 1px solid #e6e6e6;
+  border-radius: 10px;
+  background: #fcfcfc;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.card-form-box h3 {
+  margin-top: 0;
+  margin-bottom: 14px;
+  color: #1a1a1a;
+}
+
+.card-form-hidden {
+  display: none;
+}
+
+.payment-card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.payment-card-note {
+  margin: 4px 0 0;
+  color: #6c757d;
+  font-size: 13px;
+}
+
 @media (max-width: 600px) {
   .payment-methods {
+    grid-template-columns: 1fr;
+  }
+
+  .payment-card-grid {
     grid-template-columns: 1fr;
   }
 }
@@ -2360,6 +2418,37 @@ table tr:hover {
   text-decoration: underline;
 }
 
+.auth-forgot-wrap {
+  margin: 0 0 10px;
+  text-align: right;
+}
+
+.auth-forgot-link {
+  color: #f48f0c;
+  font-size: 13px;
+  text-decoration: none;
+  font-weight: 600;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.auth-forgot-link:hover {
+  text-decoration: underline;
+}
+
+.auth-forgot-step {
+  margin-top: 4px;
+}
+
+.auth-forgot-note {
+  margin: 0 0 12px;
+  color: #666;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
 .auth-hidden {
   display: none;
 }
@@ -2373,6 +2462,162 @@ body.auth-modal-lock {
     max-width: 100%;
     border-radius: 12px;
     padding: 24px 16px 18px;
+  }
+}
+
+.forgot-page-main {
+  min-height: calc(100vh - 240px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.forgot-password-card {
+  width: 100%;
+  max-width: 760px;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.08);
+  border: 1px solid #ececec;
+  overflow: hidden;
+}
+
+.forgot-password-header {
+  background: linear-gradient(120deg, #1a1a1a 0%, #2c2c2c 100%);
+  color: #ffffff;
+  padding: 24px;
+}
+
+.forgot-password-header h1 {
+  margin: 0 0 8px;
+  font-size: 28px;
+}
+
+.forgot-password-header p {
+  margin: 0;
+  color: #f2f2f2;
+}
+
+.forgot-password-body {
+  padding: 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.forgot-password-panel {
+  padding: 16px;
+  border: 1px solid #ececec;
+  border-radius: 10px;
+  background: #fcfcfc;
+}
+
+.forgot-password-panel h2 {
+  margin: 0 0 12px;
+  color: #1a1a1a;
+  font-size: 20px;
+}
+
+.forgot-password-panel p {
+  margin: 0 0 14px;
+  color: #666;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.forgot-password-field {
+  margin-bottom: 12px;
+}
+
+.forgot-password-field label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+.forgot-password-field input {
+  width: 100%;
+  border: 1px solid #d8d8d8;
+  border-radius: 8px;
+  padding: 11px 12px;
+  font-size: 15px;
+  color: #1a1a1a;
+  background: #fff;
+  box-sizing: border-box;
+  outline: none;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.forgot-password-field input:focus {
+  border-color: #f48f0c;
+  box-shadow: 0 0 0 3px rgba(244, 143, 12, 0.2);
+}
+
+.forgot-password-btn {
+  width: 100%;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #f48f0c;
+  color: #1a1a1a;
+}
+
+.forgot-password-btn:hover {
+  background: #1a1a1a;
+  color: #f48f0c;
+}
+
+.forgot-password-alert {
+  margin: 0 24px;
+  border-radius: 8px;
+  padding: 11px 12px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.forgot-password-alert.forgot-password-alert-success {
+  background-color: #e9f7ee;
+  border: 1px solid #c7e8d2;
+  color: #1a6d37;
+}
+
+.forgot-password-alert.forgot-password-alert-danger {
+  background-color: #fdeaea;
+  border: 1px solid #f6c7cb;
+  color: #8f1f28;
+}
+
+.forgot-password-errors {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.forgot-password-footer {
+  padding: 0 24px 24px;
+}
+
+.forgot-password-login-link {
+  color: #f48f0c;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.forgot-password-login-link:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .forgot-password-body {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -2429,7 +2674,7 @@ body.auth-modal-lock {
 .hero-search-shell {
   width: min(966px, 70%);
   margin: 0 auto;
-  transform: translateY(-400px);
+  transform: translateY(-250px);
 }
 
 .hero-filter-section {
@@ -2809,6 +3054,57 @@ body.auth-modal-lock {
   text-decoration: none;
 }
 
+.profile-page-wrap {
+  max-width: 760px;
+}
+
+.profile-card-box {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  padding: 28px;
+}
+
+.profile-msg-block {
+  margin-bottom: 16px;
+}
+
+.profile-meta-row {
+  background: #f8f9fa;
+  border: 1px solid #eceff3;
+  border-radius: 8px;
+  padding: 12px 14px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.profile-meta-label {
+  font-weight: 700;
+  color: #495057;
+}
+
+.profile-meta-value {
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+.profile-save-btn {
+  margin-top: 8px;
+}
+
+@media (max-width: 600px) {
+  .profile-card-box {
+    padding: 20px;
+  }
+
+  .profile-meta-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
 @media (max-width: 768px) {
   .hero-banner {
     height: 82vh;
@@ -2983,4 +3279,290 @@ body.auth-modal-lock {
 .car-grid .btn-instant.car-list-btn:hover {
   background-color: #1a1a1a !important;
   color: #f48f0c !important;
+}
+
+/* Support & Incident Module */
+.support-page {
+  padding: 28px 24px;
+}
+
+.support-subtitle {
+  color: #667085;
+  margin-bottom: 18px;
+}
+
+.incident-card {
+  background: #ffffff;
+  border: 1px solid #e6e8ec;
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.incident-card h2,
+.incident-card h3,
+.incident-card p {
+  margin-top: 0;
+}
+
+.incident-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.status-badge,
+.priority-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.status-badge {
+  background: #edf2f7;
+  color: #2d3748;
+}
+
+.status-badge.status-new {
+  background: #e7f4ff;
+  color: #1565c0;
+}
+
+.status-badge.status-open,
+.status-badge.status-in_progress {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-badge.status-pending_user {
+  background: #ede7f6;
+  color: #5e35b1;
+}
+
+.status-badge.status-resolved {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-badge.status-closed {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.priority-badge {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+.priority-badge.priority-low {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.priority-badge.priority-medium {
+  background: #e0f2fe;
+  color: #075985;
+}
+
+.priority-badge.priority-high {
+  background: #fff4ce;
+  color: #92400e;
+}
+
+.priority-badge.priority-urgent {
+  background: #ffe2e2;
+  color: #991b1b;
+}
+
+.support-form {
+  display: grid;
+  gap: 14px;
+}
+
+.support-thread {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #ffffff;
+  border: 1px solid #e8eaef;
+  border-radius: 12px;
+  padding: 18px;
+  max-height: 520px;
+  overflow-y: auto;
+  margin-bottom: 16px;
+}
+
+.support-message {
+  border-radius: 10px;
+  padding: 10px 12px;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+}
+
+.support-message.support-message-admin {
+  border-color: #f48f0c;
+  background: #fff7eb;
+}
+
+.support-message.support-message-user {
+  border-color: #d1d5db;
+  background: #f8fafc;
+}
+
+.support-message.support-message-system {
+  border-color: #93c5fd;
+  background: #eff6ff;
+}
+
+.support-message-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #64748b;
+  margin-bottom: 8px;
+}
+
+.support-message-body {
+  font-size: 14px;
+  color: #1f2937;
+  line-height: 1.5;
+}
+
+.admin-filter-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+  align-items: end;
+  margin-bottom: 16px;
+}
+
+.callback-box {
+  background: linear-gradient(135deg, #fff8ec, #ffffff);
+  border: 1px solid #ffdca8;
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 18px;
+}
+
+.callback-form-hidden {
+  display: none;
+}
+
+.support-list-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+}
+
+.admin-stats-grid .incident-card {
+  text-align: center;
+}
+
+.incident-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  background: #fff;
+  border: 1px solid #eceff3;
+  border-radius: 12px;
+}
+
+.incident-admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 980px;
+}
+
+.incident-admin-table th,
+.incident-admin-table td {
+  border-bottom: 1px solid #eef1f4;
+  padding: 12px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.incident-admin-table th {
+  background: #fafbfc;
+  color: #374151;
+  font-size: 13px;
+}
+
+.support-cta-section {
+  margin-top: 18px;
+}
+
+.support-cta-wrap {
+  background: #111827;
+  border-radius: 14px;
+  color: #ffffff;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+}
+
+.support-cta-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.support-hotline {
+  font-weight: 700;
+  color: #ffd166;
+}
+
+@media (max-width: 768px) {
+  .support-page {
+    padding: 20px 12px;
+  }
+
+  .incident-card-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .support-cta-wrap {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.callback-admin-action-form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  min-width: 140px;
+}
+
+.callback-admin-action-form .btn-submit {
+  margin-top: 0;
+  padding: 10px 12px;
+  font-size: 13px;
+}
+
+.pickup-area-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.pickup-area-group .pickup-area {
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .pickup-area-group {
+    grid-template-columns: 1fr;
+  }
 }

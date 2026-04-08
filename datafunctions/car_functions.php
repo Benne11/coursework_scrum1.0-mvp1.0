@@ -32,9 +32,12 @@ function getAllCars(PDO $db, array $filters = []): array
             $params[':category'] = $filters['category'];
         }
 
-        if (!empty($filters['transmission']) && $filters['transmission'] !== 'all') {
-            $sql .= " AND transmission = :transmission";
-            $params[':transmission'] = $filters['transmission'];
+        if (!empty($filters['seats']) && $filters['seats'] !== 'all') {
+            $allowedSeats = ['5', '7'];
+            if (in_array((string) $filters['seats'], $allowedSeats, true)) {
+                $sql .= " AND seats = :seats";
+                $params[':seats'] = (int) $filters['seats'];
+            }
         }
 
         if (!empty($filters['district']) && $filters['district'] !== 'all') {

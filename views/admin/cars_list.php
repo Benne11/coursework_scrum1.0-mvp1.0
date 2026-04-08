@@ -29,6 +29,8 @@
             <a href="index.php?action=admin_cars" class="active"><i class="fas fa-car"></i> Manage Cars</a>
             <a href="index.php?action=admin_bookings"><i class="fas fa-calendar-alt"></i> Manage Bookings</a>
             <a href="index.php?action=admin_users"><i class="fas fa-users"></i> Manage Users</a>
+            <a href="index.php?action=admin_incidents"><i class="fas fa-headset"></i> Manage Incidents</a>
+            <a href="index.php?action=admin_callbacks"><i class="fas fa-phone"></i> Callback Requests</a>
         </div>
 
         <div class="sidebar-footer">

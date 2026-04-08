@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && $action === 'browse_cars') {
         $filters = [
             'keyword'      => trim(htmlspecialchars($_GET['keyword'] ?? '')),
             'category'     => trim(htmlspecialchars($_GET['category'] ?? '')),
-            'transmission' => trim(htmlspecialchars($_GET['transmission'] ?? '')),
+            'seats'        => trim(htmlspecialchars($_GET['seats'] ?? '')),
             'service'      => trim(htmlspecialchars($_GET['service'] ?? '')),
             'district'     => trim(htmlspecialchars($_GET['district'] ?? ''))
         ];
